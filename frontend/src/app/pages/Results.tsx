@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, TrendingUp, Clock } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+  Clock,
+} from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -17,7 +24,11 @@ interface SkillGap {
 
 interface AnalysisData {
   resumeSkills: Array<{ skill: string; level: string; years: number }>;
-  requiredSkills: Array<{ skill: string; required_level: string; mandatory: boolean }>;
+  requiredSkills: Array<{
+    skill: string;
+    required_level: string;
+    mandatory: boolean;
+  }>;
   skillGaps: SkillGap[];
 }
 
@@ -26,7 +37,7 @@ export default function Results() {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("gapzero_analysis");
+    const data = localStorage.getItem("PrepGrap_analysis");
     if (data) {
       setAnalysisData(JSON.parse(data));
     } else {
@@ -56,7 +67,9 @@ export default function Results() {
   };
 
   const totalGaps = analysisData.skillGaps.length;
-  const highPriorityGaps = analysisData.skillGaps.filter((g) => g.priority === "high").length;
+  const highPriorityGaps = analysisData.skillGaps.filter(
+    (g) => g.priority === "high",
+  ).length;
   const estimatedHours = totalGaps * 3.5; // Mock calculation
 
   return (
@@ -64,11 +77,15 @@ export default function Results() {
       {/* Header */}
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate("/upload")} className="gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/upload")}
+            className="gap-2"
+          >
             <ArrowLeft className="w-4 h-4" />
             Back
           </Button>
-          <span className="text-xl font-semibold">GapZero AI</span>
+          <span className="text-xl font-semibold">PrepGrap AI</span>
           <div className="w-20"></div>
         </div>
       </header>
@@ -91,9 +108,12 @@ export default function Results() {
                 <CheckCircle className="w-8 h-8 text-primary-foreground" />
               </div>
             </motion.div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Skill Gap Analysis Complete</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Skill Gap Analysis Complete
+            </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              We've identified the skills you need to master for your target role
+              We've identified the skills you need to master for your target
+              role
             </p>
           </div>
 
@@ -149,7 +169,9 @@ export default function Results() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mb-12"
           >
-            <h2 className="text-2xl font-semibold mb-6">Identified Skill Gaps</h2>
+            <h2 className="text-2xl font-semibold mb-6">
+              Identified Skill Gaps
+            </h2>
             <div className="grid gap-4">
               {analysisData.skillGaps.map((gap, index) => {
                 const GapIcon = getGapTypeIcon(gap.gap_type);
@@ -168,26 +190,42 @@ export default function Results() {
                           </div>
                           <div className="flex-1">
                             <div className="flex items-start justify-between mb-2">
-                              <h3 className="text-xl font-semibold">{gap.skill}</h3>
-                              <Badge className={getPriorityColor(gap.priority)}>{gap.priority} priority</Badge>
+                              <h3 className="text-xl font-semibold">
+                                {gap.skill}
+                              </h3>
+                              <Badge className={getPriorityColor(gap.priority)}>
+                                {gap.priority} priority
+                              </Badge>
                             </div>
                             <p className="text-muted-foreground mb-3">
                               {gap.gap_type === "missing"
                                 ? "This skill is required but not currently in your skillset"
                                 : `Upgrade from ${gap.current} to ${gap.target} level`}
                             </p>
-                            {gap.gap_type === "needs_improvement" && gap.current && gap.target && (
-                              <div>
-                                <div className="flex items-center justify-between mb-2 text-sm">
-                                  <span className="text-muted-foreground">Current: {gap.current}</span>
-                                  <span className="text-muted-foreground">Target: {gap.target}</span>
+                            {gap.gap_type === "needs_improvement" &&
+                              gap.current &&
+                              gap.target && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-2 text-sm">
+                                    <span className="text-muted-foreground">
+                                      Current: {gap.current}
+                                    </span>
+                                    <span className="text-muted-foreground">
+                                      Target: {gap.target}
+                                    </span>
+                                  </div>
+                                  <Progress
+                                    value={
+                                      gap.current === "beginner"
+                                        ? 33
+                                        : gap.current === "intermediate"
+                                          ? 66
+                                          : 100
+                                    }
+                                    className="h-2"
+                                  />
                                 </div>
-                                <Progress
-                                  value={gap.current === "beginner" ? 33 : gap.current === "intermediate" ? 66 : 100}
-                                  className="h-2"
-                                />
-                              </div>
-                            )}
+                              )}
                           </div>
                         </div>
                       </div>
@@ -215,7 +253,10 @@ export default function Results() {
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.7 + index * 0.05 }}
                   >
-                    <Badge variant="outline" className="px-4 py-2 text-sm bg-green-500/10 border-green-500/20 text-green-700">
+                    <Badge
+                      variant="outline"
+                      className="px-4 py-2 text-sm bg-green-500/10 border-green-500/20 text-green-700"
+                    >
                       <CheckCircle className="w-3 h-3 mr-2" />
                       {skill.skill} ({skill.level})
                     </Badge>
@@ -232,7 +273,11 @@ export default function Results() {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="flex justify-center"
           >
-            <Button onClick={() => navigate("/roadmap")} size="lg" className="px-12 py-6 text-lg group">
+            <Button
+              onClick={() => navigate("/roadmap")}
+              size="lg"
+              className="px-12 py-6 text-lg group"
+            >
               View Your Learning Roadmap
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>

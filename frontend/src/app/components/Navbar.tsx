@@ -35,7 +35,7 @@ export default function Navbar() {
             <Brain className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            GapZero AI
+            PrepGrap AI
           </span>
         </motion.div>
 

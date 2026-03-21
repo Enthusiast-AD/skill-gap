@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-import { Upload as UploadIcon, FileText, CheckCircle, ArrowLeft, Loader2 } from "lucide-react";
+import {
+  Upload as UploadIcon,
+  FileText,
+  CheckCircle,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -49,8 +55,8 @@ export default function Upload() {
         resumeFileName: resumeFile.name,
         jdText: jdText || "Job description uploaded",
       };
-      localStorage.setItem("gapzero_session", JSON.stringify(sessionData));
-      
+      localStorage.setItem("PrepGrap_session", JSON.stringify(sessionData));
+
       navigate("/analyzing");
     }, 1500);
   };
@@ -68,7 +74,7 @@ export default function Upload() {
             <ArrowLeft className="w-4 h-4" />
             Back
           </Button>
-          <span className="text-xl font-semibold">GapZero AI</span>
+          <span className="text-xl font-semibold">PrepGrap AI</span>
           <div className="w-20"></div>
         </div>
       </header>
@@ -80,9 +86,12 @@ export default function Upload() {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Upload Your Documents</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Upload Your Documents
+            </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Upload your resume and job description to get started with your personalized learning pathway
+              Upload your resume and job description to get started with your
+              personalized learning pathway
             </p>
           </div>
 
@@ -135,15 +144,21 @@ export default function Upload() {
                           <CheckCircle className="w-12 h-12 text-green-600" />
                           <div className="text-center">
                             <p className="font-medium">{resumeFile.name}</p>
-                            <p className="text-sm text-muted-foreground mt-1">Click to change file</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              Click to change file
+                            </p>
                           </div>
                         </>
                       ) : (
                         <>
                           <UploadIcon className="w-12 h-12 text-muted-foreground" />
                           <div className="text-center">
-                            <p className="font-medium">Click to upload resume</p>
-                            <p className="text-sm text-muted-foreground mt-1">PDF, DOC, or DOCX (Max 10MB)</p>
+                            <p className="font-medium">
+                              Click to upload resume
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              PDF, DOC, or DOCX (Max 10MB)
+                            </p>
                           </div>
                         </>
                       )}
@@ -159,8 +174,10 @@ export default function Upload() {
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <Card className="p-6 border-border/50">
-                  <Label className="text-lg mb-3 block">Job Description *</Label>
-                  
+                  <Label className="text-lg mb-3 block">
+                    Job Description *
+                  </Label>
+
                   {/* File Upload Option */}
                   <div className="mb-4">
                     <input
@@ -190,7 +207,9 @@ export default function Upload() {
                     </label>
                   </div>
 
-                  <div className="text-center text-sm text-muted-foreground mb-4">OR</div>
+                  <div className="text-center text-sm text-muted-foreground mb-4">
+                    OR
+                  </div>
 
                   {/* Text Input Option */}
                   <Textarea
@@ -214,7 +233,12 @@ export default function Upload() {
                   type="submit"
                   size="lg"
                   className="px-12 py-6 text-lg"
-                  disabled={uploading || !resumeFile || (!jdFile && !jdText) || !jobTitle}
+                  disabled={
+                    uploading ||
+                    !resumeFile ||
+                    (!jdFile && !jdText) ||
+                    !jobTitle
+                  }
                 >
                   {uploading ? (
                     <>

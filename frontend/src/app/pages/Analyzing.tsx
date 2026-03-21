@@ -10,10 +10,18 @@ export default function Analyzing() {
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
-    { icon: FileSearch, label: "Parsing resume and job description", duration: 2000 },
+    {
+      icon: FileSearch,
+      label: "Parsing resume and job description",
+      duration: 2000,
+    },
     { icon: Brain, label: "Extracting skills with AI", duration: 2500 },
     { icon: Target, label: "Identifying skill gaps", duration: 2000 },
-    { icon: Sparkles, label: "Generating personalized pathway", duration: 2500 },
+    {
+      icon: Sparkles,
+      label: "Generating personalized pathway",
+      duration: 2500,
+    },
   ];
 
   useEffect(() => {
@@ -21,7 +29,7 @@ export default function Analyzing() {
     let stepTimeout: NodeJS.Timeout;
 
     const totalDuration = steps.reduce((acc, step) => acc + step.duration, 0);
-    const progressIncrement = 100 / totalDuration * 50; // Update every 50ms
+    const progressIncrement = (100 / totalDuration) * 50; // Update every 50ms
 
     progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -53,9 +61,17 @@ export default function Analyzing() {
           ],
           requiredSkills: [
             { skill: "Python", required_level: "expert", mandatory: true },
-            { skill: "Kubernetes", required_level: "intermediate", mandatory: true },
+            {
+              skill: "Kubernetes",
+              required_level: "intermediate",
+              mandatory: true,
+            },
             { skill: "SQL", required_level: "intermediate", mandatory: true },
-            { skill: "Docker", required_level: "intermediate", mandatory: true },
+            {
+              skill: "Docker",
+              required_level: "intermediate",
+              mandatory: true,
+            },
             { skill: "AWS", required_level: "intermediate", mandatory: true },
             { skill: "React", required_level: "expert", mandatory: false },
           ],
@@ -63,12 +79,27 @@ export default function Analyzing() {
             { skill: "Kubernetes", gap_type: "missing", priority: "high" },
             { skill: "Docker", gap_type: "missing", priority: "high" },
             { skill: "AWS", gap_type: "missing", priority: "medium" },
-            { skill: "SQL", gap_type: "needs_improvement", current: "beginner", target: "intermediate", priority: "medium" },
-            { skill: "React", gap_type: "needs_improvement", current: "intermediate", target: "expert", priority: "low" },
+            {
+              skill: "SQL",
+              gap_type: "needs_improvement",
+              current: "beginner",
+              target: "intermediate",
+              priority: "medium",
+            },
+            {
+              skill: "React",
+              gap_type: "needs_improvement",
+              current: "intermediate",
+              target: "expert",
+              priority: "low",
+            },
           ],
         };
-        localStorage.setItem("gapzero_analysis", JSON.stringify(mockAnalysisData));
-        
+        localStorage.setItem(
+          "PrepGrap_analysis",
+          JSON.stringify(mockAnalysisData),
+        );
+
         setTimeout(() => navigate("/results"), 500);
       }
     };
@@ -116,7 +147,9 @@ export default function Analyzing() {
           {/* Progress Bar */}
           <div className="mb-12">
             <Progress value={progress} className="h-3 mb-3" />
-            <p className="text-sm text-muted-foreground">{Math.round(progress)}% Complete</p>
+            <p className="text-sm text-muted-foreground">
+              {Math.round(progress)}% Complete
+            </p>
           </div>
 
           {/* Steps */}
@@ -136,8 +169,8 @@ export default function Analyzing() {
                     isActive
                       ? "border-primary bg-primary/5 shadow-md"
                       : isComplete
-                      ? "border-green-500/30 bg-green-500/5"
-                      : "border-border/30 bg-muted/10"
+                        ? "border-green-500/30 bg-green-500/5"
+                        : "border-border/30 bg-muted/10"
                   }`}
                 >
                   <div
@@ -145,8 +178,8 @@ export default function Analyzing() {
                       isActive
                         ? "bg-primary text-primary-foreground animate-pulse"
                         : isComplete
-                        ? "bg-green-500 text-white"
-                        : "bg-muted text-muted-foreground"
+                          ? "bg-green-500 text-white"
+                          : "bg-muted text-muted-foreground"
                     }`}
                   >
                     <StepIcon className="w-6 h-6" />
@@ -154,7 +187,9 @@ export default function Analyzing() {
                   <div className="flex-1 text-left">
                     <p
                       className={`font-medium ${
-                        isActive || isComplete ? "text-foreground" : "text-muted-foreground"
+                        isActive || isComplete
+                          ? "text-foreground"
+                          : "text-muted-foreground"
                       }`}
                     >
                       {step.label}
@@ -163,7 +198,11 @@ export default function Analyzing() {
                   {isActive && (
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                       className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full"
                     />
                   )}
@@ -173,8 +212,18 @@ export default function Analyzing() {
                       animate={{ scale: 1 }}
                       className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"
                     >
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </motion.div>
                   )}

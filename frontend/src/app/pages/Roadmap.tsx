@@ -55,7 +55,8 @@ export default function Roadmap() {
         duration_hours: 4,
         difficulty: "beginner",
         prerequisite: null,
-        description: "Learn the basics of containerization with Docker, including images, containers, and basic commands.",
+        description:
+          "Learn the basics of containerization with Docker, including images, containers, and basic commands.",
         rationale: "Foundation skill needed before Kubernetes",
       },
       {
@@ -67,7 +68,8 @@ export default function Roadmap() {
         duration_hours: 3,
         difficulty: "intermediate",
         prerequisite: 1,
-        description: "Master Docker Compose to orchestrate multi-container applications and manage complex environments.",
+        description:
+          "Master Docker Compose to orchestrate multi-container applications and manage complex environments.",
         rationale: "Builds on Docker basics, prepares for Kubernetes",
       },
       {
@@ -79,7 +81,8 @@ export default function Roadmap() {
         duration_hours: 5,
         difficulty: "intermediate",
         prerequisite: 2,
-        description: "Introduction to Kubernetes architecture, pods, services, and deployments.",
+        description:
+          "Introduction to Kubernetes architecture, pods, services, and deployments.",
         rationale: "Core K8s concepts needed for the role",
       },
       {
@@ -91,7 +94,8 @@ export default function Roadmap() {
         duration_hours: 3,
         difficulty: "intermediate",
         prerequisite: null,
-        description: "Master complex SQL queries, joins, subqueries, and query optimization techniques.",
+        description:
+          "Master complex SQL queries, joins, subqueries, and query optimization techniques.",
         rationale: "Upgrade from beginner to intermediate SQL level",
       },
       {
@@ -103,7 +107,8 @@ export default function Roadmap() {
         duration_hours: 4,
         difficulty: "beginner",
         prerequisite: null,
-        description: "Introduction to AWS core services: EC2, S3, RDS, Lambda, and IAM.",
+        description:
+          "Introduction to AWS core services: EC2, S3, RDS, Lambda, and IAM.",
         rationale: "Foundation for cloud infrastructure skills",
       },
       {
@@ -115,7 +120,8 @@ export default function Roadmap() {
         duration_hours: 6,
         difficulty: "intermediate",
         prerequisite: 3,
-        description: "Deploy and manage production-grade Kubernetes clusters with monitoring and scaling.",
+        description:
+          "Deploy and manage production-grade Kubernetes clusters with monitoring and scaling.",
         rationale: "Practical application of K8s for the target role",
       },
       {
@@ -127,8 +133,10 @@ export default function Roadmap() {
         duration_hours: 5,
         difficulty: "intermediate",
         prerequisite: 5,
-        description: "Learn to deploy Kubernetes clusters on AWS using EKS and integrate with AWS services.",
-        rationale: "Combines AWS and K8s skills for comprehensive cloud expertise",
+        description:
+          "Learn to deploy Kubernetes clusters on AWS using EKS and integrate with AWS services.",
+        rationale:
+          "Combines AWS and K8s skills for comprehensive cloud expertise",
       },
     ];
 
@@ -136,32 +144,66 @@ export default function Roadmap() {
 
     // Create nodes for React Flow
     const flowNodes: Node[] = mockModules.map((module, index) => {
-      const col = module.prerequisite === null ? 0 : module.prerequisite === 1 ? 1 : module.prerequisite === 2 ? 2 : module.prerequisite === 3 ? 3 : module.prerequisite === 5 ? 2 : 3;
-      const rowsInCol = mockModules.filter(m => {
-        const mCol = m.prerequisite === null ? 0 : m.prerequisite === 1 ? 1 : m.prerequisite === 2 ? 2 : m.prerequisite === 3 ? 3 : m.prerequisite === 5 ? 2 : 3;
+      const col =
+        module.prerequisite === null
+          ? 0
+          : module.prerequisite === 1
+            ? 1
+            : module.prerequisite === 2
+              ? 2
+              : module.prerequisite === 3
+                ? 3
+                : module.prerequisite === 5
+                  ? 2
+                  : 3;
+      const rowsInCol = mockModules.filter((m) => {
+        const mCol =
+          m.prerequisite === null
+            ? 0
+            : m.prerequisite === 1
+              ? 1
+              : m.prerequisite === 2
+                ? 2
+                : m.prerequisite === 3
+                  ? 3
+                  : m.prerequisite === 5
+                    ? 2
+                    : 3;
         return mCol === col;
       });
-      const rowIndex = rowsInCol.findIndex(m => m.id === module.id);
-      
+      const rowIndex = rowsInCol.findIndex((m) => m.id === module.id);
+
       return {
         id: module.id,
-        data: { 
+        data: {
           label: (
             <div className="px-4 py-3 min-w-[220px]">
               <div className="font-semibold text-sm mb-1">{module.title}</div>
-              <div className="text-xs text-muted-foreground mb-2">{module.skill}</div>
+              <div className="text-xs text-muted-foreground mb-2">
+                {module.skill}
+              </div>
               <div className="flex items-center gap-2 text-xs">
                 <Clock className="w-3 h-3" />
                 {module.duration_hours}h
               </div>
             </div>
-          )
+          ),
         },
         position: { x: col * 300, y: rowIndex * 200 },
         style: {
-          background: module.difficulty === "beginner" ? "#dcfce7" : module.difficulty === "intermediate" ? "#fef9c3" : "#fecaca",
+          background:
+            module.difficulty === "beginner"
+              ? "#dcfce7"
+              : module.difficulty === "intermediate"
+                ? "#fef9c3"
+                : "#fecaca",
           border: "2px solid",
-          borderColor: module.difficulty === "beginner" ? "#16a34a" : module.difficulty === "intermediate" ? "#ca8a04" : "#dc2626",
+          borderColor:
+            module.difficulty === "beginner"
+              ? "#16a34a"
+              : module.difficulty === "intermediate"
+                ? "#ca8a04"
+                : "#dc2626",
           borderRadius: "8px",
           fontSize: "12px",
           width: 240,
@@ -190,12 +232,15 @@ export default function Roadmap() {
     setEdges(flowEdges);
   }, [setNodes, setEdges]);
 
-  const onNodeClick = useCallback((_: any, node: Node) => {
-    const module = modules.find((m) => m.id === node.id);
-    if (module) {
-      setSelectedModule(module);
-    }
-  }, [modules]);
+  const onNodeClick = useCallback(
+    (_: any, node: Node) => {
+      const module = modules.find((m) => m.id === node.id);
+      if (module) {
+        setSelectedModule(module);
+      }
+    },
+    [modules],
+  );
 
   const totalHours = modules.reduce((acc, m) => acc + m.duration_hours, 0);
 
@@ -217,11 +262,15 @@ export default function Roadmap() {
       {/* Header */}
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate("/results")} className="gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/results")}
+            className="gap-2"
+          >
             <ArrowLeft className="w-4 h-4" />
             Back to Results
           </Button>
-          <span className="text-xl font-semibold">GapZero AI</span>
+          <span className="text-xl font-semibold">PrepGrap AI</span>
           <Button variant="outline" onClick={() => navigate("/")}>
             New Analysis
           </Button>
@@ -236,11 +285,14 @@ export default function Roadmap() {
         >
           {/* Title Section */}
           <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Your Learning Roadmap</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Your Learning Roadmap
+            </h1>
             <p className="text-xl text-muted-foreground mb-6">
-              A personalized pathway designed to close your skill gaps efficiently
+              A personalized pathway designed to close your skill gaps
+              efficiently
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <Card className="px-6 py-3 border-border/50 bg-card inline-flex items-center gap-3">
                 <BookOpen className="w-5 h-5 text-primary" />
@@ -253,7 +305,9 @@ export default function Roadmap() {
                 <Clock className="w-5 h-5 text-primary" />
                 <div>
                   <div className="text-2xl font-bold">{totalHours}h</div>
-                  <div className="text-sm text-muted-foreground">Total Duration</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total Duration
+                  </div>
                 </div>
               </Card>
             </div>
@@ -272,9 +326,14 @@ export default function Roadmap() {
                 <div className="text-sm">
                   <p className="font-medium mb-1">Interactive Roadmap</p>
                   <p className="text-muted-foreground">
-                    Click on any module to see detailed information. Arrows show prerequisites. Colors indicate difficulty: 
-                    <span className="text-green-600 mx-1">Green = Beginner</span>
-                    <span className="text-yellow-600 mx-1">Yellow = Intermediate</span>
+                    Click on any module to see detailed information. Arrows show
+                    prerequisites. Colors indicate difficulty:
+                    <span className="text-green-600 mx-1">
+                      Green = Beginner
+                    </span>
+                    <span className="text-yellow-600 mx-1">
+                      Yellow = Intermediate
+                    </span>
                     <span className="text-red-600 mx-1">Red = Advanced</span>
                   </p>
                 </div>
@@ -330,15 +389,24 @@ export default function Roadmap() {
                     <AccordionTrigger className="hover:no-underline py-4">
                       <div className="flex items-center gap-4 text-left flex-1">
                         <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <span className="font-bold text-primary">{module.order}</span>
+                          <span className="font-bold text-primary">
+                            {module.order}
+                          </span>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg mb-1">{module.title}</h3>
+                          <h3 className="font-semibold text-lg mb-1">
+                            {module.title}
+                          </h3>
                           <div className="flex flex-wrap items-center gap-2">
                             <Badge variant="outline" className="text-xs">
                               {module.skill}
                             </Badge>
-                            <Badge className={getDifficultyColor(module.difficulty) + " text-xs"}>
+                            <Badge
+                              className={
+                                getDifficultyColor(module.difficulty) +
+                                " text-xs"
+                              }
+                            >
                               {module.difficulty}
                             </Badge>
                             <span className="text-sm text-muted-foreground flex items-center gap-1">
@@ -353,14 +421,20 @@ export default function Roadmap() {
                       <div className="space-y-4 pl-14">
                         <div>
                           <h4 className="font-medium mb-2">Description</h4>
-                          <p className="text-muted-foreground">{module.description}</p>
+                          <p className="text-muted-foreground">
+                            {module.description}
+                          </p>
                         </div>
                         <div>
                           <h4 className="font-medium mb-2">Why This Module?</h4>
-                          <p className="text-muted-foreground">{module.rationale}</p>
+                          <p className="text-muted-foreground">
+                            {module.rationale}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">Module Type:</span>
+                          <span className="text-sm font-medium">
+                            Module Type:
+                          </span>
                           <Badge variant="outline">{module.type}</Badge>
                         </div>
                         {module.prerequisite && (
@@ -391,7 +465,8 @@ export default function Roadmap() {
                 Ready to Start Learning?
               </h3>
               <p className="text-primary-foreground/90 mb-6">
-                Follow this pathway to bridge your skill gaps and become job-ready
+                Follow this pathway to bridge your skill gaps and become
+                job-ready
               </p>
               <Button
                 variant="secondary"
