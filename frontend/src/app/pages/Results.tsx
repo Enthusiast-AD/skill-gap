@@ -13,37 +13,17 @@ import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-
-interface SkillGap {
-  skill: string;
-  gap_type: "missing" | "needs_improvement";
-  priority: "high" | "medium" | "low";
-  current?: string;
-  target?: string;
-}
-
-interface AnalysisData {
-  resumeSkills: Array<{ skill: string; level: string; years: number }>;
-  requiredSkills: Array<{
-    skill: string;
-    required_level: string;
-    mandatory: boolean;
-  }>;
-  skillGaps: SkillGap[];
-}
+import { useAppContext } from "../context/AppContext";
 
 export default function Results() {
   const navigate = useNavigate();
-  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+  const { analysisData } = useAppContext();
 
   useEffect(() => {
-    const data = localStorage.getItem("PrepGrap_analysis");
-    if (data) {
-      setAnalysisData(JSON.parse(data));
-    } else {
+    if (!analysisData) {
       navigate("/upload");
     }
-  }, [navigate]);
+  }, [analysisData, navigate]);
 
   if (!analysisData) {
     return null;
@@ -66,8 +46,8 @@ export default function Results() {
     return gapType === "missing" ? AlertCircle : TrendingUp;
   };
 
-  const totalGaps = analysisData.skillGaps.length;
-  const highPriorityGaps = analysisData.skillGaps.filter(
+  const totalGaps = analysisData.skill_gaps.length;
+  const highPriorityGaps = analysisData.skill_gaps.filter(
     (g) => g.priority === "high",
   ).length;
   const estimatedHours = totalGaps * 3.5; // Mock calculation
@@ -173,7 +153,7 @@ export default function Results() {
               Identified Skill Gaps
             </h2>
             <div className="grid gap-4">
-              {analysisData.skillGaps.map((gap, index) => {
+              {analysisData.skill_gaps.map((gap, index) => {
                 const GapIcon = getGapTypeIcon(gap.gap_type);
                 return (
                   <motion.div
@@ -246,7 +226,7 @@ export default function Results() {
             <h2 className="text-2xl font-semibold mb-6">Your Current Skills</h2>
             <Card className="p-6 border-border/50 bg-card">
               <div className="flex flex-wrap gap-3">
-                {analysisData.resumeSkills.map((skill, index) => (
+                {analysisData.resume_skills.map((skill, index) => (
                   <motion.div
                     key={skill.skill}
                     initial={{ scale: 0 }}
