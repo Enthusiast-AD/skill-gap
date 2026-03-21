@@ -55,15 +55,24 @@ export default function Navbar() {
         </nav>
 
         {/* CTA Button */}
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            onClick={() => navigate("/upload")}
-            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
-            size="sm"
+        <div className="flex items-center gap-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => navigate("/signin")}
+            className="hidden sm:block text-sm font-bold text-foreground hover:text-primary transition-colors duration-200"
           >
-            Get Started
-          </Button>
-        </motion.div>
+            Log In
+          </motion.button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              onClick={() => navigate("/signup")}
+              className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 font-bold"
+              size="sm"
+            >
+              Sign Up
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </motion.header>
   );
