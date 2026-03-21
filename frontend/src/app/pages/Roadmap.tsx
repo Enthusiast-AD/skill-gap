@@ -1,17 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-import ReactFlow, {
-  Node,
-  Edge,
-  Background,
-  Controls,
-  MiniMap,
-  useNodesState,
-  useEdgesState,
-  MarkerType,
-} from "reactflow";
-import "reactflow/dist/style.css";
+import LearningPath from "../components/LearningPath";
 import { ArrowLeft, Clock, BookOpen, CheckCircle, Info } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -38,10 +28,7 @@ interface Module {
 
 export default function Roadmap() {
   const navigate = useNavigate();
-  const [modules, setModules] = useState<Module[]>([]);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [modules, setModules] = useState<Module[]>([]);  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
 
   useEffect(() => {
     // Generate mock pathway data
@@ -142,105 +129,9 @@ export default function Roadmap() {
 
     setModules(mockModules);
 
-    // Create nodes for React Flow
-    const flowNodes: Node[] = mockModules.map((module, index) => {
-      const col =
-        module.prerequisite === null
-          ? 0
-          : module.prerequisite === 1
-            ? 1
-            : module.prerequisite === 2
-              ? 2
-              : module.prerequisite === 3
-                ? 3
-                : module.prerequisite === 5
-                  ? 2
-                  : 3;
-      const rowsInCol = mockModules.filter((m) => {
-        const mCol =
-          m.prerequisite === null
-            ? 0
-            : m.prerequisite === 1
-              ? 1
-              : m.prerequisite === 2
-                ? 2
-                : m.prerequisite === 3
-                  ? 3
-                  : m.prerequisite === 5
-                    ? 2
-                    : 3;
-        return mCol === col;
-      });
-      const rowIndex = rowsInCol.findIndex((m) => m.id === module.id);
+      }, []);
 
-      return {
-        id: module.id,
-        data: {
-          label: (
-            <div className="px-4 py-3 min-w-[220px]">
-              <div className="font-semibold text-sm mb-1">{module.title}</div>
-              <div className="text-xs text-muted-foreground mb-2">
-                {module.skill}
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <Clock className="w-3 h-3" />
-                {module.duration_hours}h
-              </div>
-            </div>
-          ),
-        },
-        position: { x: col * 300, y: rowIndex * 200 },
-        style: {
-          background:
-            module.difficulty === "beginner"
-              ? "#dcfce7"
-              : module.difficulty === "intermediate"
-                ? "#fef9c3"
-                : "#fecaca",
-          border: "2px solid",
-          borderColor:
-            module.difficulty === "beginner"
-              ? "#16a34a"
-              : module.difficulty === "intermediate"
-                ? "#ca8a04"
-                : "#dc2626",
-          borderRadius: "8px",
-          fontSize: "12px",
-          width: 240,
-        },
-      };
-    });
-
-    const flowEdges: Edge[] = mockModules
-      .filter((module) => module.prerequisite !== null)
-      .map((module) => ({
-        id: `e${module.prerequisite}-${module.id}`,
-        source: module.prerequisite!.toString(),
-        target: module.id,
-        type: "smoothstep",
-        animated: true,
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-        },
-        style: {
-          stroke: "#6b7280",
-          strokeWidth: 2,
-        },
-      }));
-
-    setNodes(flowNodes);
-    setEdges(flowEdges);
-  }, [setNodes, setEdges]);
-
-  const onNodeClick = useCallback(
-    (_: any, node: Node) => {
-      const module = modules.find((m) => m.id === node.id);
-      if (module) {
-        setSelectedModule(module);
-      }
-    },
-    [modules],
-  );
+  
 
   const totalHours = modules.reduce((acc, m) => acc + m.duration_hours, 0);
 
@@ -341,31 +232,15 @@ export default function Roadmap() {
             </Card>
           </motion.div>
 
-          {/* React Flow Visualization */}
+          {/* Learning Path Visualization */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-8"
           >
-            <Card className="p-0 border-border/50 bg-card overflow-hidden">
-              <div style={{ height: "600px" }}>
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onNodeClick={onNodeClick}
-                  fitView
-                  attributionPosition="bottom-left"
-                >
-                  <Background />
-                  <Controls />
-                  <MiniMap nodeStrokeWidth={3} zoomable pannable />
-                </ReactFlow>
-              </div>
-            </Card>
-          </motion.div>
+            <LearningPath pathwayData={{ modules: modules as any }} />
+</motion.div>
 
           {/* Module Details */}
           <motion.div

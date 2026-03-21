@@ -1,30 +1,28 @@
 import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { CheckCircle2, Circle } from 'lucide-react';
-import clsx from 'clsx';
+import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export function cn(...inputs) {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export default function RoadmapNode({ data }) {
-  
-  
-  const isBeginner = data.difficulty === 'beginner';
-  const isAdvanced = data.difficulty === 'advanced';
-  
-  
-  let bgColor = 'bg-white';
-  if (data.difficulty === 'beginner') bgColor = 'bg-[#10b981]'; // Green
-  else if (data.difficulty === 'intermediate') bgColor = 'bg-[#fcd34d]'; // Yellow
-  else if (data.difficulty === 'advanced') bgColor = 'bg-[#f43f5e]'; // Red
+export interface RoadmapNodeProps {
+  data: {
+    difficulty?: string;
+    status?: string;
+    title?: string;
+    duration_hours?: number;
+    type?: string;
+  };
+}
 
-  
-  
-  bgColor = 'bg-[#ffe600]'; // default to roadmap yellow
+export default function RoadmapNode({ data }: RoadmapNodeProps) {
+  let bgColor = 'bg-[#ffe600]'; // default to roadmap yellow
   if (data.difficulty === 'beginner') bgColor = 'bg-green-300';
-  if (data.difficulty === 'advanced') bgColor = 'bg-red-300';
+  else if (data.difficulty === 'advanced') bgColor = 'bg-red-300';
+  
   if (data.status === 'completed') bgColor = 'bg-gray-200';
 
   return (
