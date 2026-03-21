@@ -33,7 +33,7 @@ async def extract_resume_skills(resume_text: str) -> List[Dict[str, Any]]:
     """
     
     try:
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model='gemini-2.5-flash',
             contents=prompt
         )
@@ -58,7 +58,7 @@ async def extract_jd_skills(jd_text: str) -> List[Dict[str, Any]]:
     """
 
     try:
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model='gemini-2.5-flash',
             contents=prompt
         )
@@ -87,7 +87,7 @@ async def analyze_gaps(resume_skills: List[Dict], jd_skills: List[Dict], job_tit
     """
 
     try:
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model='gemini-2.5-flash',
             contents=prompt
         )
@@ -95,6 +95,7 @@ async def analyze_gaps(resume_skills: List[Dict], jd_skills: List[Dict], job_tit
         return json.loads(cleaned_text)
     except Exception as e:
         print(f"Error analyzing gaps: {e}")
+        print(f"FAILED TEXT:\n{response.text[:200] if 'response' in locals() else 'NO RESPONSE'}")
         return {"skill_gaps": [], "reasoning_trace": "Error during analysis."}
 
 async def generate_pathway(job_title: str, skill_gaps: List[Dict]) -> Dict[str, Any]:
@@ -125,7 +126,7 @@ async def generate_pathway(job_title: str, skill_gaps: List[Dict]) -> Dict[str, 
     """
 
     try:
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model='gemini-2.5-flash',
             contents=prompt
         )

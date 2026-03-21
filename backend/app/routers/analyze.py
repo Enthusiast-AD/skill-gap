@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+import asyncio
 from app.db.connection import get_db
 from app.db.models import Session as DBSession, ResumeSkill, JDSkill
 from app.models.schemas import AnalyzeRequest, AnalyzeResponse
@@ -18,32 +19,64 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
     # Check if we already have skills to avoid re-running expensive AI calls (caching)
     
     existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
-    if not existing_resume_skills:
-        extracted_resume = await gemini_service.extract_resume_skills(session.resume_text)
-        for skill in extracted_resume:
-            db_skill = ResumeSkill(
+    existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
+
+    if not existing_resume_skills and not existing_jd_skills:
+        extracted_resume, extracted_jd = await asyncio.gather(
+            gemini_service.extract_resume_skills(session.resume_text),
+            gemini_service.extract_jd_skills(session.jd_text)
+        )
+        
+        resume_db_skills = [
+            ResumeSkill(
                 session_id=session.id,
                 skill_name=skill.get("skill_name", "unknown"),
                 proficiency_level=skill.get("proficiency_level", "beginner"),
                 years_experience=float(skill.get("years_experience", 0))
-            )
-            db.add(db_skill)
-        db.commit() # Commit intermediate valid state
-        existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
-
-    existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
-    if not existing_jd_skills:
-        extracted_jd = await gemini_service.extract_jd_skills(session.jd_text)
-        for skill in extracted_jd:
-            db_skill = JDSkill(
+            ) for skill in extracted_resume
+        ]
+        
+        jd_db_skills = [
+            JDSkill(
                 session_id=session.id,
                 skill_name=skill.get("skill_name", "unknown"),
                 required_level=skill.get("required_level", "beginner"),
                 is_mandatory=bool(skill.get("is_mandatory", True))
-            )
-            db.add(db_skill)
+            ) for skill in extracted_jd
+        ]
+        
+        db.add_all(resume_db_skills + jd_db_skills)
         db.commit()
+        existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
         existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
+    else:
+        if not existing_resume_skills:
+            extracted_resume = await gemini_service.extract_resume_skills(session.resume_text)
+            resume_db_skills = [
+                ResumeSkill(
+                    session_id=session.id,
+                    skill_name=skill.get("skill_name", "unknown"),
+                    proficiency_level=skill.get("proficiency_level", "beginner"),
+                    years_experience=float(skill.get("years_experience", 0))
+                ) for skill in extracted_resume
+            ]
+            db.add_all(resume_db_skills)
+            db.commit() 
+            existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
+
+        if not existing_jd_skills:
+            extracted_jd = await gemini_service.extract_jd_skills(session.jd_text)
+            jd_db_skills = [
+                JDSkill(
+                    session_id=session.id,
+                    skill_name=skill.get("skill_name", "unknown"),
+                    required_level=skill.get("required_level", "beginner"),
+                    is_mandatory=bool(skill.get("is_mandatory", True))
+                ) for skill in extracted_jd
+            ]
+            db.add_all(jd_db_skills)
+            db.commit()
+            existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
 
     # Format for Analysis
     resume_skills_list = [
