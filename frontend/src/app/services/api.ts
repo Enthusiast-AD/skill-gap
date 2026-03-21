@@ -75,9 +75,7 @@ export const uploadFiles = async (
   formData.append('resume', resumeFile);
   
   if (typeof jobDescription === 'string') {
-    const blob = new Blob([jobDescription], { type: 'text/plain' });
-    const file = new File([blob], 'job_description.txt', { type: 'text/plain' });
-    formData.append('job_description', file);
+    formData.append('jd_text', jobDescription);
   } else {
     formData.append('job_description', jobDescription);
   }

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import LearningPath from "../components/LearningPath";
-import { ArrowLeft, Clock, BookOpen, CheckCircle, Info } from "lucide-react";
+import { ArrowLeft, Clock, BookOpen, CheckCircle, Info, ExternalLink } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -13,6 +13,12 @@ import {
   AccordionTrigger,
 } from "../components/ui/accordion";
 import { useAppContext } from "../context/AppContext";
+
+const extractYouTubeId = (url: string | undefined): string | null => {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+  return match ? match[1] : null;
+};
 
 export default function Roadmap() {
   const navigate = useNavigate();
@@ -207,6 +213,29 @@ export default function Roadmap() {
                             <span className="text-muted-foreground">
                               Prerequisite: Module {module.prerequisite}
                             </span>
+                          </div>
+                        )}
+                        {module.resource_url && (
+                          <div className="mt-2">
+                            <h4 className="font-medium mb-3">Learning Resource</h4>
+                            {extractYouTubeId(module.resource_url) ? (
+                              <div className="rounded-lg overflow-hidden border border-border/50 bg-muted/20 relative aspect-video mt-2 max-w-2xl">
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${extractYouTubeId(module.resource_url)}`}
+                                  title={module.title}
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  className="absolute top-0 left-0 w-full h-full"
+                                ></iframe>
+                              </div>
+                            ) : (
+                              <Button asChild variant="outline" className="gap-2">
+                                <a href={module.resource_url} target="_blank" rel="noopener noreferrer">
+                                  Access Resource
+                                  <ExternalLink className="w-4 h-4" />
+                                </a>
+                              </Button>
+                            )}
                           </div>
                         )}
                       </div>
