@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import upload, analyze, pathway
+from app.routers import upload, analyze, pathway, auth
 from app.db.connection import engine, Base
 import os
 from dotenv import load_dotenv
@@ -25,6 +25,7 @@ app.add_middleware(
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
 app.include_router(analyze.router, prefix="/api", tags=["Analyze"])
 app.include_router(pathway.router, prefix="/api", tags=["Pathway"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 
 @app.get("/api/health")
 def health_check():

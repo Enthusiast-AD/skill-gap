@@ -9,6 +9,14 @@ const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export interface UploadResponse {
   session_id: string;
   resume_text_preview: string;
@@ -103,6 +111,28 @@ export const generatePathway = async (sessionId: string): Promise<PathwayRespons
     session_id: sessionId,
   });
   return response.data;
+};
+
+export const loginUser = async (email: string, password: string) => {
+  const response = await apiClient.post('/auth/login', { email, password });
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+  }
+  return response.data;
+};
+
+export const registerUser = async (email: string, password: string) => {
+  const response = await apiClient.post('/auth/signup', { email, password });
+  return response.data;
+};
+
+export const getMyRoadmaps = async () => {
+  const response = await apiClient.get('/auth/my-roadmaps');
+  return response.data;
+};
+
+export const logoutUser = () => {
+  localStorage.removeItem('token');
 };
 
 export default apiClient;

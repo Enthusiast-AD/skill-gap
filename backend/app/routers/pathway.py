@@ -14,6 +14,40 @@ async def generate_learning_pathway(request: PathwayRequest, db: Session = Depen
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
+    # Check if we already generated a pathway for this session
+    existing_pathway = db.query(Pathway).filter(Pathway.session_id == session.id).first()
+    if existing_pathway:
+        existing_modules = db.query(Module).filter(Module.pathway_id == existing_pathway.id).order_by(Module.order_index).all()
+        # Reconstruct pathway output
+        
+        # Build id -> order_index map to restore 'prerequisite'
+        id_to_order = {mod.id: mod.order_index for mod in existing_modules}
+        
+        modules_data = []
+        for mod in existing_modules:
+            prereq_order = id_to_order.get(mod.prerequisite_module_id) if mod.prerequisite_module_id else None
+            
+            modules_data.append({
+                "order": mod.order_index,
+                "title": mod.title,
+                "skill": mod.skill_addressed,
+                "type": mod.module_type,
+                "duration_hours": mod.duration_hours,
+                "difficulty": mod.difficulty,
+                "prerequisite": prereq_order,
+                "rationale": mod.rationale,
+                "description": mod.description,
+                "resource_url": mod.resource_url
+            })
+        return PathwayResponse(
+            session_id=str(session.id),
+            pathway_id=existing_pathway.id,
+            total_modules=existing_pathway.total_modules,
+            estimated_hours=existing_pathway.estimated_hours,
+            modules=modules_data,
+            reasoning_trace="Loaded from previous generation"
+        )
+
     # 1. Retrieve Skills
     resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
     jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
@@ -31,7 +65,17 @@ async def generate_learning_pathway(request: PathwayRequest, db: Session = Depen
     ]
 
     # 2. Re-Analyze Gaps (since we don't store them persistently yet)
-    analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title)
+    # Actually, we now store them in session.analysis_result
+    
+    if session.analysis_result:
+        analysis_result = json.loads(session.analysis_result)
+    else:
+        # Fallback just in case
+        analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title)
+        session.analysis_result = json.dumps(analysis_result)
+        db.add(session)
+        db.commit()
+        
     skill_gaps = analysis_result.get("skill_gaps", [])
 
     if not skill_gaps:
@@ -136,7 +180,7 @@ async def generate_learning_pathway(request: PathwayRequest, db: Session = Depen
         ))
 
     return PathwayResponse(
-        session_id=session.id,
+        session_id=str(session.id),
         pathway_id=new_pathway.id,
         total_modules=new_pathway.total_modules,
         estimated_hours=new_pathway.estimated_hours,

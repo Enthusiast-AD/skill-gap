@@ -2,9 +2,16 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { Brain } from "lucide-react";
 import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
 
   const navLinks = [
     { label: "Features", id: "features" },
@@ -56,22 +63,36 @@ export default function Navbar() {
 
         {/* CTA Button */}
         <div className="flex items-center gap-4">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            onClick={() => navigate("/signin")}
-            className="hidden sm:block text-sm font-bold text-foreground hover:text-primary transition-colors duration-200"
-          >
-            Log In
-          </motion.button>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => navigate("/signup")}
-              className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 font-bold"
-              size="sm"
-            >
-              Sign Up
-            </Button>
-          </motion.div>
+          {isLoggedIn ? (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => navigate("/profile")}
+                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 font-bold"
+                size="sm"
+              >
+                Dashboard
+              </Button>
+            </motion.div>
+          ) : (
+            <>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                onClick={() => navigate("/signin")}
+                className="hidden sm:block text-sm font-bold text-foreground hover:text-primary transition-colors duration-200"
+              >
+                Log In
+              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={() => navigate("/signup")}
+                  className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 font-bold"
+                  size="sm"
+                >
+                  Sign Up
+                </Button>
+              </motion.div>
+            </>
+          )}
         </div>
       </div>
     </motion.header>

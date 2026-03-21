@@ -4,15 +4,29 @@ from sqlalchemy.orm import relationship
 import uuid
 from .connection import Base
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+
+    sessions = relationship("Session", back_populates="user")
+
+
 class Session(Base):
     __tablename__ = "sessions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     resume_text = Column(Text, nullable=True)
     jd_text = Column(Text, nullable=True)
     job_title = Column(String(255), nullable=True)
+    analysis_result = Column(Text, nullable=True)
 
+    user = relationship("User", back_populates="sessions")
     resume_skills = relationship("ResumeSkill", back_populates="session")
     jd_skills = relationship("JDSkill", back_populates="session")
     pathways = relationship("Pathway", back_populates="session")

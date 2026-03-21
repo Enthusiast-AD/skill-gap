@@ -6,6 +6,7 @@ import Results from "./pages/Results";
 import Roadmap from "./pages/Roadmap";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -36,4 +37,8 @@ export const router = createBrowserRouter([
     path: "/signup",
     Component: SignUp,
   },
+  {
+    path: "/profile",
+    Component: Profile,
+  }
 ]);

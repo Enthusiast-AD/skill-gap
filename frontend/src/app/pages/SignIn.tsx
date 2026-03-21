@@ -1,12 +1,37 @@
 import { motion } from "motion/react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Brain, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useState } from "react";
+import { loginUser } from "../services/api";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError("Please put in both email and password.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      await loginUser(email, password);
+      // Navigate to home after successful login
+      navigate("/");
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8 font-sans transition-colors duration-500">
@@ -80,7 +105,8 @@ export default function SignIn() {
               </p>
             </div>
 
-            <form className="space-y-7" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-7" onSubmit={handleLogin}>
+              {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
               <div className="space-y-5">
                 <div className="space-y-2 group">
                   <label className="text-sm font-bold text-foreground/70 ml-1">
@@ -92,6 +118,8 @@ export default function SignIn() {
                       placeholder="name@example.com"
                       type="email"
                       autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="h-12 pl-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
                     />
                   </div>
@@ -114,6 +142,8 @@ export default function SignIn() {
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="h-12 pl-11 pr-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
                     />
                     <button
@@ -131,37 +161,10 @@ export default function SignIn() {
                 </div>
               </div>
 
-              <Button className="w-full h-12 text-base font-black rounded-2xl bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(var(--primary),0.2)] hover:shadow-[0_12px_32px_rgba(var(--primary),0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-                Sign In Now
+              <Button disabled={loading} type="submit" className="w-full h-12 text-base font-black rounded-2xl bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(var(--primary),0.2)] hover:shadow-[0_12px_32px_rgba(var(--primary),0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+                {loading ? "Signing In..." : "Sign In Now"}
               </Button>
             </form>
-
-            <div className="relative py-4 flex items-center gap-4">
-              <div className="flex-grow border-t border-border/60"></div>
-              <span className="text-[10px] uppercase tracking-[0.2em] font-black text-muted-foreground/40 bg-background/0 px-2">
-                Secure Login
-              </span>
-              <div className="flex-grow border-t border-border/60"></div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                className="h-12 rounded-2xl border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary font-bold transition-all duration-300 group/btn"
-              >
-                <span className="flex items-center gap-2 group-hover/btn:scale-110 transition-transform">
-                  Google
-                </span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-12 rounded-2xl border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary font-bold transition-all duration-300 group/btn"
-              >
-                <span className="flex items-center gap-2 group-hover/btn:scale-110 transition-transform">
-                  GitHub
-                </span>
-              </Button>
-            </div>
 
             <p className="text-center text-[15px] font-medium text-muted-foreground/80">
               Not a member?{" "}
