@@ -79,15 +79,6 @@ export default function Landing() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-block mb-6"
           >
-            <motion.span
-              whileHover={{ scale: 1.05, y: -2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-sm font-medium shadow-lg hover:bg-white/20 transition-all duration-300"
-            >
-              <Zap className="w-4 h-4 text-primary" />
-              <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                AI-Adaptive Onboarding Engine
-              </span>
-            </motion.span>
           </motion.div>
 
           <motion.h1
@@ -177,7 +168,7 @@ export default function Landing() {
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-40 pointer-events-none" />
         </div>
 
-        <div className="mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ x: -30, opacity: 0 }}
