@@ -13,14 +13,18 @@ import { Card } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
+import { uploadFiles } from "../services/api";
+import { useAppContext } from "../context/AppContext";
 
 export default function Upload() {
   const navigate = useNavigate();
+  const { setSessionId, setJobTitle: setContextJobTitle } = useAppContext();
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [jdFile, setJdFile] = useState<File | null>(null);
   const [jdText, setJdText] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -30,13 +34,16 @@ export default function Upload() {
 
   const handleJdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setJdFile(e.target.files[0]);
-      // Read file content
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setJdText(event.target?.result as string);
-      };
-      reader.readAsText(e.target.files[0]);
+      const file = e.target.files[0];
+      setJdFile(file);
+      // Read file content if needed for preview, though backend can handle the file
+      if (file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setJdText(event.target?.result as string);
+        };
+        reader.readAsText(file);
+      }
     }
   };
 
@@ -45,20 +52,21 @@ export default function Upload() {
     if (!resumeFile || (!jdFile && !jdText) || !jobTitle) return;
 
     setUploading(true);
+    setError("");
 
-    // Simulate upload and processing
-    setTimeout(() => {
-      // Store session data in localStorage for mock functionality
-      const sessionData = {
-        sessionId: crypto.randomUUID(),
-        jobTitle,
-        resumeFileName: resumeFile.name,
-        jdText: jdText || "Job description uploaded",
-      };
-      localStorage.setItem("PrepGrap_session", JSON.stringify(sessionData));
+    try {
+      const jdData = jdFile || jdText;
+      const response = await uploadFiles(resumeFile, jdData, jobTitle);
+      
+      setSessionId(response.session_id);
+      setContextJobTitle(jobTitle);
 
       navigate("/analyzing");
-    }, 1500);
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      setError(err.response?.data?.detail || "Failed to upload files. Please try again.");
+      setUploading(false);
+    }
   };
 
   return (
@@ -223,6 +231,11 @@ export default function Upload() {
               </motion.div>
 
               {/* Submit Button */}
+              {error && (
+                <div className="text-red-500 text-center mb-4">
+                  {error}
+                </div>
+              )}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

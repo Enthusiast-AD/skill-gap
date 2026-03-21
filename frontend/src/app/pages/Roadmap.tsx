@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import LearningPath from "../components/LearningPath";
-import { ArrowLeft, Clock, BookOpen, CheckCircle, Info } from "lucide-react";
+import { ArrowLeft, Clock, BookOpen, CheckCircle, Info, ExternalLink } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -12,128 +12,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../components/ui/accordion";
+import { useAppContext } from "../context/AppContext";
 
-interface Module {
-  id: string;
-  order: number;
-  title: string;
-  skill: string;
-  type: string;
-  duration_hours: number;
-  difficulty: string;
-  prerequisite: number | null;
-  description: string;
-  rationale: string;
-}
+const extractYouTubeId = (url: string | undefined): string | null => {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+  return match ? match[1] : null;
+};
 
 export default function Roadmap() {
   const navigate = useNavigate();
-  const [modules, setModules] = useState<Module[]>([]);  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const { pathwayData } = useAppContext();
 
   useEffect(() => {
-    // Generate mock pathway data
-    const mockModules: Module[] = [
-      {
-        id: "1",
-        order: 1,
-        title: "Docker Fundamentals",
-        skill: "Docker",
-        type: "video + hands-on",
-        duration_hours: 4,
-        difficulty: "beginner",
-        prerequisite: null,
-        description:
-          "Learn the basics of containerization with Docker, including images, containers, and basic commands.",
-        rationale: "Foundation skill needed before Kubernetes",
-      },
-      {
-        id: "2",
-        order: 2,
-        title: "Docker Compose & Multi-Container Apps",
-        skill: "Docker",
-        type: "hands-on lab",
-        duration_hours: 3,
-        difficulty: "intermediate",
-        prerequisite: 1,
-        description:
-          "Master Docker Compose to orchestrate multi-container applications and manage complex environments.",
-        rationale: "Builds on Docker basics, prepares for Kubernetes",
-      },
-      {
-        id: "3",
-        order: 3,
-        title: "Kubernetes Essentials",
-        skill: "Kubernetes",
-        type: "video + quiz",
-        duration_hours: 5,
-        difficulty: "intermediate",
-        prerequisite: 2,
-        description:
-          "Introduction to Kubernetes architecture, pods, services, and deployments.",
-        rationale: "Core K8s concepts needed for the role",
-      },
-      {
-        id: "4",
-        order: 4,
-        title: "SQL Joins & Advanced Queries",
-        skill: "SQL",
-        type: "hands-on lab",
-        duration_hours: 3,
-        difficulty: "intermediate",
-        prerequisite: null,
-        description:
-          "Master complex SQL queries, joins, subqueries, and query optimization techniques.",
-        rationale: "Upgrade from beginner to intermediate SQL level",
-      },
-      {
-        id: "5",
-        order: 5,
-        title: "AWS Core Services Overview",
-        skill: "AWS",
-        type: "video + reading",
-        duration_hours: 4,
-        difficulty: "beginner",
-        prerequisite: null,
-        description:
-          "Introduction to AWS core services: EC2, S3, RDS, Lambda, and IAM.",
-        rationale: "Foundation for cloud infrastructure skills",
-      },
-      {
-        id: "6",
-        order: 6,
-        title: "Kubernetes in Production",
-        skill: "Kubernetes",
-        type: "hands-on project",
-        duration_hours: 6,
-        difficulty: "intermediate",
-        prerequisite: 3,
-        description:
-          "Deploy and manage production-grade Kubernetes clusters with monitoring and scaling.",
-        rationale: "Practical application of K8s for the target role",
-      },
-      {
-        id: "7",
-        order: 7,
-        title: "AWS + Kubernetes Integration",
-        skill: "AWS",
-        type: "hands-on project",
-        duration_hours: 5,
-        difficulty: "intermediate",
-        prerequisite: 5,
-        description:
-          "Learn to deploy Kubernetes clusters on AWS using EKS and integrate with AWS services.",
-        rationale:
-          "Combines AWS and K8s skills for comprehensive cloud expertise",
-      },
-    ];
+    if (!pathwayData) {
+      navigate("/");
+    }
+  }, [pathwayData, navigate]);
 
-    setModules(mockModules);
+  if (!pathwayData) return null;
 
-      }, []);
-
-  
-
-  const totalHours = modules.reduce((acc, m) => acc + m.duration_hours, 0);
+  const modules = pathwayData.modules;
+  const totalHours = pathwayData.estimated_hours || modules.reduce((sum, m) => sum + m.duration_hours, 0);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -150,7 +50,6 @@ export default function Roadmap() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      {/* Header */}
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Button
@@ -174,7 +73,6 @@ export default function Roadmap() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Title Section */}
           <div className="mb-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Your Learning Roadmap
@@ -204,7 +102,6 @@ export default function Roadmap() {
             </div>
           </div>
 
-          {/* Info Banner */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -232,7 +129,6 @@ export default function Roadmap() {
             </Card>
           </motion.div>
 
-          {/* Learning Path Visualization */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -240,9 +136,8 @@ export default function Roadmap() {
             className="mb-8"
           >
             <LearningPath pathwayData={{ modules: modules as any }} />
-</motion.div>
+          </motion.div>
 
-          {/* Module Details */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -252,13 +147,13 @@ export default function Roadmap() {
             <Accordion type="single" collapsible className="space-y-4">
               {modules.map((module, index) => (
                 <motion.div
-                  key={module.id}
+                  key={module.order.toString()}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.4 + index * 0.05 }}
                 >
                   <AccordionItem
-                    value={module.id}
+                    value={module.order.toString()}
                     className="border border-border/50 rounded-lg px-6 bg-card hover:border-primary/30 transition-all"
                   >
                     <AccordionTrigger className="hover:no-underline py-4">
@@ -320,6 +215,29 @@ export default function Roadmap() {
                             </span>
                           </div>
                         )}
+                        {module.resource_url && (
+                          <div className="mt-2">
+                            <h4 className="font-medium mb-3">Learning Resource</h4>
+                            {extractYouTubeId(module.resource_url) ? (
+                              <div className="rounded-lg overflow-hidden border border-border/50 bg-muted/20 relative aspect-video mt-2 max-w-2xl">
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${extractYouTubeId(module.resource_url)}`}
+                                  title={module.title}
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  className="absolute top-0 left-0 w-full h-full"
+                                ></iframe>
+                              </div>
+                            ) : (
+                              <Button asChild variant="outline" className="gap-2">
+                                <a href={module.resource_url} target="_blank" rel="noopener noreferrer">
+                                  Access Resource
+                                  <ExternalLink className="w-4 h-4" />
+                                </a>
+                              </Button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -328,7 +246,6 @@ export default function Roadmap() {
             </Accordion>
           </motion.div>
 
-          {/* CTA */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

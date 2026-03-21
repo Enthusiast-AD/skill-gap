@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { Brain, FileSearch, Target, Sparkles } from "lucide-react";
 import { Progress } from "../components/ui/progress";
+import { useAppContext } from "../context/AppContext";
+import { analyzeSkills, generatePathway } from "../services/api";
 
 export default function Analyzing() {
   const navigate = useNavigate();
+  const { sessionId, setAnalysisData, setPathwayData } = useAppContext();
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [error, setError] = useState("");
+  const effectRan = useRef(false);
 
   const steps = [
     {
@@ -25,92 +30,42 @@ export default function Analyzing() {
   ];
 
   useEffect(() => {
-    let progressInterval: NodeJS.Timeout;
-    let stepTimeout: NodeJS.Timeout;
+    if (!sessionId) {
+      navigate("/upload");
+      return;
+    }
 
-    const totalDuration = steps.reduce((acc, step) => acc + step.duration, 0);
-    const progressIncrement = (100 / totalDuration) * 50; // Update every 50ms
+    if (effectRan.current) return;
+    effectRan.current = true;
 
-    progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return Math.min(prev + progressIncrement, 100);
-      });
-    }, 50);
+    const processData = async () => {
+      try {
+        // Step 0: Parsing
+        setCurrentStep(0);
+        setProgress(25);
+        
+        // Step 1 & 2: Analyze
+        setCurrentStep(1);
+        const analysisResponse = await analyzeSkills(sessionId);
+        setAnalysisData(analysisResponse);
+        setProgress(60);
+        
+        // Step 3: Pathway
+        setCurrentStep(2);
+        setCurrentStep(3);
+        const pathwayResponse = await generatePathway(sessionId);
+        setPathwayData(pathwayResponse);
+        setProgress(100);
 
-    // Progress through steps
-    let currentStepIndex = 0;
-    const progressThroughSteps = () => {
-      if (currentStepIndex < steps.length) {
-        setCurrentStep(currentStepIndex);
-        stepTimeout = setTimeout(() => {
-          currentStepIndex++;
-          progressThroughSteps();
-        }, steps[currentStepIndex].duration);
-      } else {
-        // Generate mock analysis data
-        const mockAnalysisData = {
-          resumeSkills: [
-            { skill: "Python", level: "expert", years: 4 },
-            { skill: "JavaScript", level: "intermediate", years: 2 },
-            { skill: "SQL", level: "beginner", years: 0.5 },
-            { skill: "React", level: "intermediate", years: 2 },
-          ],
-          requiredSkills: [
-            { skill: "Python", required_level: "expert", mandatory: true },
-            {
-              skill: "Kubernetes",
-              required_level: "intermediate",
-              mandatory: true,
-            },
-            { skill: "SQL", required_level: "intermediate", mandatory: true },
-            {
-              skill: "Docker",
-              required_level: "intermediate",
-              mandatory: true,
-            },
-            { skill: "AWS", required_level: "intermediate", mandatory: true },
-            { skill: "React", required_level: "expert", mandatory: false },
-          ],
-          skillGaps: [
-            { skill: "Kubernetes", gap_type: "missing", priority: "high" },
-            { skill: "Docker", gap_type: "missing", priority: "high" },
-            { skill: "AWS", gap_type: "missing", priority: "medium" },
-            {
-              skill: "SQL",
-              gap_type: "needs_improvement",
-              current: "beginner",
-              target: "intermediate",
-              priority: "medium",
-            },
-            {
-              skill: "React",
-              gap_type: "needs_improvement",
-              current: "intermediate",
-              target: "expert",
-              priority: "low",
-            },
-          ],
-        };
-        localStorage.setItem(
-          "PrepGrap_analysis",
-          JSON.stringify(mockAnalysisData),
-        );
-
-        setTimeout(() => navigate("/results"), 500);
+        setTimeout(() => navigate("/results"), 1000);
+      } catch (err: any) {
+        console.error("Analysis error:", err);
+        setError(err.response?.data?.detail || "Failed to analyze profile. Please try again.");
       }
     };
 
-    progressThroughSteps();
-
-    return () => {
-      clearInterval(progressInterval);
-      clearTimeout(stepTimeout);
-    };
-  }, [navigate]);
+    processData();
+  }, [sessionId, navigate, setAnalysisData, setPathwayData]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20 flex items-center justify-center">
@@ -143,6 +98,12 @@ export default function Analyzing() {
           <p className="text-xl text-muted-foreground mb-12">
             Our AI is processing your documents to identify skill gaps
           </p>
+
+          {error && (
+            <div className="mb-6 p-4 text-sm text-red-700 bg-red-100 rounded-lg">
+              {error}
+            </div>
+          )}
 
           {/* Progress Bar */}
           <div className="mb-12">
