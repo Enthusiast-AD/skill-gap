@@ -5,13 +5,15 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
-  MarkerType
+  MarkerType,
+  Connection,
+  Edge,
+  Node
 } from 'reactflow';
 import dagre from 'dagre';
 import 'reactflow/dist/style.css';
 
 import RoadmapNode from './RoadmapNode';
-import { defaultPathway } from '../api/mockData';
 
 const nodeTypes = {
   roadmap: RoadmapNode
@@ -20,13 +22,11 @@ const nodeTypes = {
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-// Function to generate nodes and edges and layout them with dagre
-const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction, align: 'UL', nodesep: 100, ranksep: 150 });
 
   nodes.forEach((node) => {
-    // Arbitrary size matching our tailwind class roughly
     dagreGraph.setNode(node.id, { width: 250, height: 80 });
   });
 
@@ -38,11 +38,9 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 
   nodes.forEach((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
-    node.targetPosition = isHorizontal ? 'left' : 'top';
-    node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+    node.targetPosition = isHorizontal ? 'left' : 'top' as any;
+    node.sourcePosition = isHorizontal ? 'right' : 'bottom' as any;
     
-    // We are shifting the dagre node position (anchor=center center) to the top left
-    // so it matches the React Flow node anchor point (top left).
     node.position = {
       x: nodeWithPosition.x - 250 / 2,
       y: nodeWithPosition.y - 80 / 2,
@@ -54,9 +52,24 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   return { nodes, edges };
 };
 
-export default function LearningPath({ pathwayData = defaultPathway }) {
-  // Convert API pathway output into ReactFlow format
-  const initialNodes = useMemo(() => {
+export interface ModuleData {
+  id: number | string;
+  title: string;
+  type: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  duration_hours: number;
+  dependencies: (number | string)[];
+  status?: string;
+  prerequisite?: number | null; // Support for the other format
+}
+
+export interface PathwayData {
+  modules: ModuleData[];
+}
+
+export default function LearningPath({ pathwayData }: { pathwayData: PathwayData }) {
+  const initialNodes: Node[] = useMemo(() => {
+    if (!pathwayData?.modules) return [];
     return pathwayData.modules.map(mod => ({
       id: mod.id.toString(),
       type: 'roadmap',
@@ -67,13 +80,15 @@ export default function LearningPath({ pathwayData = defaultPathway }) {
         duration_hours: mod.duration_hours,
         status: mod.status || 'pending',
       },
-      position: { x: 0, y: 0 } // handled by layout
+      position: { x: 0, y: 0 }
     }));
   }, [pathwayData]);
 
-  const initialEdges = useMemo(() => {
-    const edges = [];
+  const initialEdges: Edge[] = useMemo(() => {
+    if (!pathwayData?.modules) return [];
+    const edges: Edge[] = [];
     pathwayData.modules.forEach(mod => {
+      // Connect existing dependencies array
       if (mod.dependencies && mod.dependencies.length > 0) {
         mod.dependencies.forEach(dep => {
           edges.push({
@@ -90,6 +105,22 @@ export default function LearningPath({ pathwayData = defaultPathway }) {
           });
         });
       }
+      
+      // Fallback: connect pre-requisites if present instead
+      if (mod.prerequisite !== undefined && mod.prerequisite !== null && (!mod.dependencies || mod.dependencies.length === 0)) {
+        edges.push({
+          id: `e${mod.prerequisite}-${mod.id}`,
+          source: mod.prerequisite.toString(),
+          target: mod.id.toString(),
+          type: 'smoothstep',
+          animated: true,
+          style: { stroke: 'black', strokeWidth: 3 },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: 'black',
+          }
+        });
+      }
     });
     return edges;
   }, [pathwayData]);
@@ -102,13 +133,24 @@ export default function LearningPath({ pathwayData = defaultPathway }) {
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
+  // Re-run layout if data changes
+  React.useEffect(() => {
+    const { nodes: n, edges: e } = getLayoutedElements(initialNodes, initialEdges, 'TB');
+    setNodes(n);
+    setEdges(e);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
+
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({ ...params, type: 'smoothstep', animated: true }, eds)),
+    (params: Connection | Edge) => setEdges((eds) => addEdge({ ...params, type: 'smoothstep', animated: true }, eds)),
     [setEdges]
   );
 
+  if (!pathwayData?.modules) {
+    return <div className="p-8 text-center text-gray-500">No pathway data available</div>;
+  }
+
   return (
-    <div className="w-full h-[800px] border-4 border-black rounded-xl bg-[#fafafa] shadow-[8px_8px_0_0_rgba(0,0,0,1)] inset-0 overflow-hidden">
+    <div className="w-full h-[800px] border-4 border-black rounded-xl bg-[#fafafa] shadow-[8px_8px_0_0_rgba(0,0,0,1)] overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
