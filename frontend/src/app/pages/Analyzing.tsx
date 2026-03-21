@@ -89,9 +89,7 @@ export default function Analyzing() {
             }}
             className="inline-block mb-8"
           >
-            <div className="w-24 h-24 bg-gradient-to-br from-primary via-primary/80 to-primary/60 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <Brain className="w-12 h-12 text-primary-foreground" />
-            </div>
+            <img src="/favicon.ico" alt="PrepGrap Logo" className="w-24 h-24 rounded-2xl mx-auto shadow-lg" />
           </motion.div>
 
           <h1 className="text-4xl font-bold mb-4">Analyzing Your Profile</h1>

@@ -447,15 +447,13 @@ export default function Landing() {
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 cursor-pointer"
             >
-              <div className="w-6 h-6 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center shadow-lg">
-                <Brain className="w-4 h-4 text-primary-foreground" />
-              </div>
+              <img src="/favicon.ico" alt="PrepGrap Logo" className="w-6 h-6 rounded-lg shadow-lg" />
               <span className="font-bold text-lg bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                PrepGrap AI
+                PrepGrap
               </span>
             </motion.div>
             <p className="text-sm text-muted-foreground">
-              © 2026 PrepGrap AI. Bridging skills gaps with intelligent
+              © 2026 PrepGrap. Bridging skills gaps with intelligent
               onboarding.
             </p>
           </div>

@@ -42,11 +42,9 @@ export default function SignIn() {
 
           <div className="relative z-10">
             <Link to="/" className="flex items-center gap-3 group/logo w-fit">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-2xl transition-all duration-500 group-hover/logo:rotate-12 group-hover/logo:scale-110">
-                <Brain className="h-7 w-7" />
-              </div>
+                <img src="/favicon.ico" alt="PrepGrap Logo" className="h-12 w-12 rounded-2xl shadow-2xl transition-all duration-500 group-hover/logo:rotate-12 group-hover/logo:scale-110" />
               <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                PrepGrap <span className="text-primary italic">AI</span>
+                PrepGrap
               </span>
             </Link>
           </div>
@@ -66,30 +64,7 @@ export default function SignIn() {
               </p>
             </div>
 
-            <div className="flex items-center gap-6">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-10 w-10 shrink-0 rounded-full border-2 border-background bg-gradient-to-br from-muted-foreground/10 to-muted-foreground/20 backdrop-blur-sm"
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-foreground">
-                  10,000+ Students
-                </span>
-                <span className="text-xs font-semibold text-muted-foreground">
-                  Joined PrepGrap AI
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative z-10 pt-12 border-t border-border/40">
-            <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-[0.2em]">
-              Powered by Advanced Gemini 2.0
-            </p>
+            
           </div>
         </div>
 

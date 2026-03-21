@@ -38,14 +38,8 @@ export default function Navbar() {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center shadow-lg">
-            <Brain className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            PrepGrap AI
-          </span>
-        </motion.div>
-
+            <img src="/favicon.ico" alt="PrepGrap Logo" className="w-8 h-8 rounded-lg shadow-lg" />
+            </motion.div>
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (

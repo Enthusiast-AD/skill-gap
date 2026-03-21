@@ -60,7 +60,7 @@ export default function Roadmap() {
             <ArrowLeft className="w-4 h-4" />
             Back to Results
           </Button>
-          <span className="text-xl font-semibold">PrepGrap AI</span>
+          <span className="text-xl font-semibold">PrepGrap</span>
           <Button variant="outline" onClick={() => navigate("/")}>
             New Analysis
           </Button>
