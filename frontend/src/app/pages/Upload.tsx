@@ -82,7 +82,7 @@ export default function Upload() {
             <ArrowLeft className="w-4 h-4" />
             Back
           </Button>
-          <span className="text-xl font-semibold">PrepGrap AI</span>
+          <span className="text-xl font-semibold">PrepGrap</span>
           <div className="w-20"></div>
         </div>
       </header>

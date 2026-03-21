@@ -46,11 +46,9 @@ export default function Profile() {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex justify-between items-center bg-card/50 p-6 rounded-3xl border border-border/50 shadow-sm backdrop-blur-md">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground">
-              <Brain className="h-6 w-6" />
-            </div>
+            <img src="/favicon.ico" alt="PrepGrap Logo" className="h-10 w-10 rounded-xl" />
             <span className="text-xl font-black tracking-tighter">
-              PrepGrap <span className="text-primary italic">AI</span>
+              PrepGrap
             </span>
           </Link>
           <div className="flex gap-4">
