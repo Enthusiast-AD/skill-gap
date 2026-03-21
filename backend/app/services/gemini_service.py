@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 import os
 import json
 from typing import List, Dict, Any
@@ -6,10 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Configure Gemini API
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel('gemini-2.5-flash')
+# Create Gemini client
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def clean_json_response(text: str) -> str:
     """Cleans the response from Gemini to ensure valid JSON."""
@@ -35,7 +33,10 @@ async def extract_resume_skills(resume_text: str) -> List[Dict[str, Any]]:
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         cleaned_text = clean_json_response(response.text)
         return json.loads(cleaned_text)
     except Exception as e:
@@ -57,7 +58,10 @@ async def extract_jd_skills(jd_text: str) -> List[Dict[str, Any]]:
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         cleaned_text = clean_json_response(response.text)
         return json.loads(cleaned_text)
     except Exception as e:
@@ -83,7 +87,10 @@ async def analyze_gaps(resume_skills: List[Dict], jd_skills: List[Dict], job_tit
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         cleaned_text = clean_json_response(response.text)
         return json.loads(cleaned_text)
     except Exception as e:
@@ -104,7 +111,7 @@ async def generate_pathway(job_title: str, skill_gaps: List[Dict]) -> Dict[str, 
     - duration_hours: realistic estimate (float)
     - difficulty: beginner / intermediate / advanced
     - type: video / reading / quiz / hands-on / project
-    - resource_url: a placeholder URL relevant to the topic
+    - resource_url: a REAL, valid URL to a high-quality learning resource (e.g., a specific YouTube video, Coursera course, official documentation, or tutorial). DO NOT use example.com or placeholder URLs.
     - prerequisite: null or order index of prerequisite module (use null if none)
     - rationale: why this module is at this position?
 
@@ -118,7 +125,10 @@ async def generate_pathway(job_title: str, skill_gaps: List[Dict]) -> Dict[str, 
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         cleaned_text = clean_json_response(response.text)
         return json.loads(cleaned_text)
     except Exception as e:
