@@ -53,7 +53,8 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
 };
 
 export interface ModuleData {
-  id: number | string;
+  id?: number | string;
+  order?: number;
   title: string;
   type: string;
   difficulty: "beginner" | "intermediate" | "advanced";
@@ -71,7 +72,7 @@ export default function LearningPath({ pathwayData }: { pathwayData: PathwayData
   const initialNodes: Node[] = useMemo(() => {
     if (!pathwayData?.modules) return [];
     return pathwayData.modules.map(mod => ({
-      id: mod.id.toString(),
+      id: (mod.id || mod.order)!.toString(),
       type: 'roadmap',
       data: {
         title: mod.title,
@@ -92,9 +93,9 @@ export default function LearningPath({ pathwayData }: { pathwayData: PathwayData
       if (mod.dependencies && mod.dependencies.length > 0) {
         mod.dependencies.forEach(dep => {
           edges.push({
-            id: `e${dep}-${mod.id}`,
+            id: `e${dep}-${mod.id || mod.order}`,
             source: dep.toString(),
-            target: mod.id.toString(),
+            target: (mod.id || mod.order)!.toString(),
             type: 'smoothstep',
             animated: true,
             style: { stroke: 'black', strokeWidth: 3 },
@@ -109,9 +110,9 @@ export default function LearningPath({ pathwayData }: { pathwayData: PathwayData
       // Fallback: connect pre-requisites if present instead
       if (mod.prerequisite !== undefined && mod.prerequisite !== null && (!mod.dependencies || mod.dependencies.length === 0)) {
         edges.push({
-          id: `e${mod.prerequisite}-${mod.id}`,
+          id: `e${mod.prerequisite}-${mod.id || mod.order}`,
           source: mod.prerequisite.toString(),
-          target: mod.id.toString(),
+          target: (mod.id || mod.order)!.toString(),
           type: 'smoothstep',
           animated: true,
           style: { stroke: 'black', strokeWidth: 3 },
