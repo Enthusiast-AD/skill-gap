@@ -16,7 +16,6 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
 
     # 1. Extract Skills
     # Check if we already have skills to avoid re-running expensive AI calls (caching)
-    # For now, we'll assume we re-run or check if DB is empty
     
     existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
     if not existing_resume_skills:
@@ -57,12 +56,17 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
     ]
 
     # 2. Analyze Gaps
-    # We'll use the gemini_service.analyze_gaps
-    
-    analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title)
+    # We check if we already saved the analysis result mapping
+    if session.analysis_result:
+        analysis_result = json.loads(session.analysis_result)
+    else:
+        analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title)
+        session.analysis_result = json.dumps(analysis_result)
+        db.add(session)
+        db.commit()
 
     return AnalyzeResponse(
-        session_id=session.id,
+        session_id=str(session.id),
         resume_skills=[
             {"skill": s.skill_name, "level": s.proficiency_level, "years": s.years_experience} 
             for s in existing_resume_skills

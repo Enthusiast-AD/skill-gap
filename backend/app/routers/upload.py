@@ -2,9 +2,10 @@ from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.db.connection import get_db
-from app.db.models import Session as DBSession
+from app.db.models import Session as DBSession, User
 from app.services import parser_service
 from app.models.schemas import UploadResponse
+from app.core.dependencies import get_current_user_optional
 import uuid
 
 router = APIRouter()
@@ -15,7 +16,8 @@ async def upload_files(
     job_title: str = Form(...),
     job_description: Optional[UploadFile] = File(None),
     jd_text: Optional[str] = Form(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     # Read file content
     resume_content = await resume.read()
@@ -40,7 +42,8 @@ async def upload_files(
     new_session = DBSession(
         resume_text=resume_parsed_text,
         jd_text=jd_parsed_text,
-        job_title=job_title
+        job_title=job_title,
+        user_id=current_user.id if current_user else None
     )
     db.add(new_session)
     db.commit()
