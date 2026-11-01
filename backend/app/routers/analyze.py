@@ -15,16 +15,14 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    # 1. Extract Skills
-    # Check if we already have skills to avoid re-running expensive AI calls (caching)
-    
+    # 1. Extract Skills (check DB cache first)
     existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
     existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
 
     if not existing_resume_skills and not existing_jd_skills:
         extracted_resume, extracted_jd = await asyncio.gather(
-            gemini_service.extract_resume_skills(session.resume_text),
-            gemini_service.extract_jd_skills(session.jd_text)
+            gemini_service.extract_resume_skills(session.resume_text or ""),
+            gemini_service.extract_jd_skills(session.jd_text or "")
         )
         
         resume_db_skills = [
@@ -51,7 +49,7 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
         existing_jd_skills = db.query(JDSkill).filter(JDSkill.session_id == session.id).all()
     else:
         if not existing_resume_skills:
-            extracted_resume = await gemini_service.extract_resume_skills(session.resume_text)
+            extracted_resume = await gemini_service.extract_resume_skills(session.resume_text or "")
             resume_db_skills = [
                 ResumeSkill(
                     session_id=session.id,
@@ -65,7 +63,7 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
             existing_resume_skills = db.query(ResumeSkill).filter(ResumeSkill.session_id == session.id).all()
 
         if not existing_jd_skills:
-            extracted_jd = await gemini_service.extract_jd_skills(session.jd_text)
+            extracted_jd = await gemini_service.extract_jd_skills(session.jd_text or "")
             jd_db_skills = [
                 JDSkill(
                     session_id=session.id,
@@ -89,11 +87,15 @@ async def analyze_skills(request: AnalyzeRequest, db: Session = Depends(get_db))
     ]
 
     # 2. Analyze Gaps
-    # We check if we already saved the analysis result mapping
+    analysis_result = None
     if session.analysis_result:
-        analysis_result = json.loads(session.analysis_result)
-    else:
-        analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title)
+        try:
+            analysis_result = json.loads(session.analysis_result)
+        except Exception:
+            analysis_result = None
+
+    if not analysis_result:
+        analysis_result = await gemini_service.analyze_gaps(resume_skills_list, jd_skills_list, session.job_title or "Target Role")
         session.analysis_result = json.dumps(analysis_result)
         db.add(session)
         db.commit()

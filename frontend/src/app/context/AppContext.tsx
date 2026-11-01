@@ -1,5 +1,16 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { AnalyzeResponse, PathwayResponse } from '../services/api';
+
+const STORAGE_KEY = 'prepgrap_session_state';
+const THEME_KEY = 'prepgrap_theme';
+const COMPLETED_MODULES_KEY = 'prepgrap_completed_modules';
+
+interface StoredState {
+  sessionId: string | null;
+  analysisData: AnalyzeResponse | null;
+  pathwayData: PathwayResponse | null;
+  jobTitle: string;
+}
 
 interface AppContextType {
   sessionId: string | null;
@@ -10,23 +21,149 @@ interface AppContextType {
   setPathwayData: (data: PathwayResponse | null) => void;
   jobTitle: string;
   setJobTitle: (title: string) => void;
+  completedModules: number[];
+  toggleModuleCompletion: (order: number) => boolean;
+  isModuleCompleted: (order: number) => boolean;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+  toggleTheme: () => void;
   clearSession: () => void;
+  isLoaded: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [analysisData, setAnalysisData] = useState<AnalyzeResponse | null>(null);
-  const [pathwayData, setPathwayData] = useState<PathwayResponse | null>(null);
-  const [jobTitle, setJobTitle] = useState<string>('');
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [sessionId, setSessionIdState] = useState<string | null>(null);
+  const [analysisData, setAnalysisDataState] = useState<AnalyzeResponse | null>(null);
+  const [pathwayData, setPathwayDataState] = useState<PathwayResponse | null>(null);
+  const [jobTitle, setJobTitleState] = useState<string>('');
+  const [completedModules, setCompletedModules] = useState<number[]>([]);
+  const [theme, setThemeState] = useState<'light' | 'dark'>('dark');
 
-  const clearSession = () => {
-    setSessionId(null);
-    setAnalysisData(null);
-    setPathwayData(null);
-    setJobTitle('');
+  // Initialize theme and restored state on mount
+  useEffect(() => {
+    // Theme setup
+    const savedTheme = localStorage.getItem(THEME_KEY) as 'light' | 'dark' | null;
+    const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'dark');
+    setThemeState(initialTheme);
+    if (initialTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Session restore
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed: StoredState = JSON.parse(stored);
+        if (parsed.sessionId) setSessionIdState(parsed.sessionId);
+        if (parsed.analysisData) setAnalysisDataState(parsed.analysisData);
+        if (parsed.pathwayData) setPathwayDataState(parsed.pathwayData);
+        if (parsed.jobTitle) setJobTitleState(parsed.jobTitle);
+      }
+    } catch (e) {
+      console.warn('Could not restore session state:', e);
+    }
+
+    // Completed modules restore
+    try {
+      const savedModules = localStorage.getItem(COMPLETED_MODULES_KEY);
+      if (savedModules) {
+        setCompletedModules(JSON.parse(savedModules));
+      }
+    } catch (e) {
+      console.warn('Could not restore completed modules:', e);
+    }
+
+    setIsLoaded(true);
+  }, []);
+
+  // Sync session state to sessionStorage
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      const stateToSave: StoredState = {
+        sessionId,
+        analysisData,
+        pathwayData,
+        jobTitle,
+      };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+    } catch (e) {
+      console.warn('Could not save session state:', e);
+    }
+  }, [sessionId, analysisData, pathwayData, jobTitle, isLoaded]);
+
+  // Sync completed modules to localStorage
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem(COMPLETED_MODULES_KEY, JSON.stringify(completedModules));
+    } catch (e) {
+      console.warn('Could not save completed modules:', e);
+    }
+  }, [completedModules, isLoaded]);
+
+  const setTheme = useCallback((newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
+    localStorage.setItem(THEME_KEY, newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
+  const setSessionId = (id: string | null) => {
+    setSessionIdState(id);
   };
+
+  const setAnalysisData = (data: AnalyzeResponse | null) => {
+    setAnalysisDataState(data);
+  };
+
+  const setPathwayData = (data: PathwayResponse | null) => {
+    setPathwayDataState(data);
+  };
+
+  const setJobTitle = (title: string) => {
+    setJobTitleState(title);
+  };
+
+  const toggleModuleCompletion = useCallback((order: number): boolean => {
+    let nowCompleted = false;
+    setCompletedModules((prev) => {
+      if (prev.includes(order)) {
+        nowCompleted = false;
+        return prev.filter((o) => o !== order);
+      } else {
+        nowCompleted = true;
+        return [...prev, order];
+      }
+    });
+    return nowCompleted;
+  }, []);
+
+  const isModuleCompleted = useCallback((order: number): boolean => {
+    return completedModules.includes(order);
+  }, [completedModules]);
+
+  const clearSession = useCallback(() => {
+    setSessionIdState(null);
+    setAnalysisDataState(null);
+    setPathwayDataState(null);
+    setJobTitleState('');
+    setCompletedModules([]);
+    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(COMPLETED_MODULES_KEY);
+  }, []);
 
   return (
     <AppContext.Provider
@@ -39,7 +176,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setPathwayData,
         jobTitle,
         setJobTitle,
+        completedModules,
+        toggleModuleCompletion,
+        isModuleCompleted,
+        theme,
+        setTheme,
+        toggleTheme,
         clearSession,
+        isLoaded,
       }}
     >
       {children}

@@ -23,7 +23,7 @@ class Session(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
     resume_text = Column(Text, nullable=True)
     jd_text = Column(Text, nullable=True)
-    job_title = Column(String(255), nullable=True)
+    job_title = Column(Text, nullable=True)
     analysis_result = Column(Text, nullable=True)
 
     user = relationship("User", back_populates="sessions")
@@ -37,8 +37,8 @@ class ResumeSkill(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey("sessions.id"))
-    skill_name = Column(String(255))
-    proficiency_level = Column(String(50))  # beginner / intermediate / expert
+    skill_name = Column(Text)
+    proficiency_level = Column(String(100))  # beginner / intermediate / expert
     years_experience = Column(Float)
 
     session = relationship("Session", back_populates="resume_skills")
@@ -49,8 +49,8 @@ class JDSkill(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey("sessions.id"))
-    skill_name = Column(String(255))
-    required_level = Column(String(50))
+    skill_name = Column(Text)
+    required_level = Column(String(100))
     is_mandatory = Column(Boolean, default=True)
 
     session = relationship("Session", back_populates="jd_skills")
@@ -75,12 +75,12 @@ class Module(Base):
     id = Column(Integer, primary_key=True, index=True)
     pathway_id = Column(Integer, ForeignKey("pathways.id"))
     order_index = Column(Integer)
-    title = Column(String(255))
+    title = Column(Text)
     description = Column(Text)
-    skill_addressed = Column(String(255))
+    skill_addressed = Column(Text)
     duration_hours = Column(Float)
-    difficulty = Column(String(50))      # beginner / intermediate / advanced
-    module_type = Column(String(100))    # video / quiz / hands-on / reading
+    difficulty = Column(String(100))      # beginner / intermediate / advanced
+    module_type = Column(String(100))     # video / quiz / hands-on / reading
     resource_url = Column(Text, nullable=True)
     prerequisite_module_id = Column(Integer, nullable=True)   # self-referencing for dependency graph
     rationale = Column(Text, nullable=True)
