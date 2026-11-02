@@ -49,7 +49,7 @@ export default function PricingCards() {
         <Button
           variant="outline"
           onClick={() => navigate("/upload")}
-          className="w-full h-11 rounded-2xl text-xs font-bold border-border/80 hover:bg-muted/60"
+          className="w-full h-11 rounded-2xl text-xs font-bold border-border/80 hover:bg-muted/80 hover:border-foreground/20 active:scale-95 transition-all cursor-pointer"
         >
           Start Free Analysis
         </Button>
@@ -110,7 +110,7 @@ export default function PricingCards() {
 
         <Button
           onClick={() => navigate("/upload")}
-          className="w-full h-11 rounded-2xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/35 gap-1.5"
+          className="w-full h-11 rounded-2xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/35 hover:brightness-105 active:scale-95 transition-all gap-1.5 cursor-pointer"
         >
           Start Pro Free Trial
           <ArrowRight className="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ export default function PricingCards() {
         <Button
           variant="outline"
           onClick={() => navigate("/upload")}
-          className="w-full h-11 rounded-2xl text-xs font-bold border-border/80 hover:bg-muted/60"
+          className="w-full h-11 rounded-2xl text-xs font-bold border-border/80 hover:bg-muted/80 hover:border-foreground/20 active:scale-95 transition-all cursor-pointer"
         >
           Request Team Demo
         </Button>

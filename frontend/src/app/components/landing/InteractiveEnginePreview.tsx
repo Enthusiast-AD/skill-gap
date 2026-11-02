@@ -66,7 +66,7 @@ export default function InteractiveEnginePreview() {
       </div>
 
       {/* Segmented Tab Navigation with Spring Layout Indicator */}
-      <div className="flex items-center border-b border-border/60 bg-muted/15 px-3 py-2 overflow-x-auto gap-1">
+      <div className="flex items-center border-b border-border/60 bg-muted/15 px-3 py-2 overflow-x-auto gap-1.5 scrollbar-none">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -75,25 +75,25 @@ export default function InteractiveEnginePreview() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 whitespace-nowrap ${
+              className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer active:scale-95 ${
                 isActive
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                  ? "text-foreground font-extrabold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeEngineTab"
-                  className="absolute inset-0 bg-background dark:bg-card rounded-xl border border-border/80 shadow-sm"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  className="absolute inset-0 bg-background dark:bg-card rounded-xl border border-border/80 shadow-xs"
+                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}
               <span className="relative z-10 flex items-center gap-1.5">
                 <Icon className={`w-3.5 h-3.5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
                 {tab.label}
                 {tab.badge && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                    isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono transition-colors ${
+                    isActive ? "bg-primary/10 text-primary font-bold" : "bg-muted text-muted-foreground"
                   }`}>
                     {tab.badge}
                   </span>
@@ -341,16 +341,16 @@ export default function InteractiveEnginePreview() {
                     <div
                       key={mod.order}
                       onClick={() => toggleDemoStep(mod.order)}
-                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] select-none ${
                         isDone
-                          ? "border-emerald-500/40 bg-emerald-500/[0.04]"
-                          : "border-border/60 bg-muted/20 hover:border-primary/40 hover:bg-muted/30"
+                          ? "border-emerald-500/40 bg-emerald-500/[0.06] shadow-xs"
+                          : "border-border/60 bg-muted/20 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs"
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div
-                          className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 transition-colors ${
-                            isDone ? "bg-emerald-500 text-white" : "bg-primary/10 text-primary"
+                          className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 transition-all ${
+                            isDone ? "bg-emerald-500 text-white shadow-xs scale-105" : "bg-primary/10 text-primary"
                           }`}
                         >
                           {isDone ? <Check className="w-4 h-4 stroke-[3]" /> : mod.order}
@@ -365,7 +365,7 @@ export default function InteractiveEnginePreview() {
                         </div>
                       </div>
 
-                      <Badge variant="outline" className="text-[10px] flex-shrink-0">
+                      <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${isDone ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400" : ""}`}>
                         {mod.diff}
                       </Badge>
                     </div>
@@ -384,10 +384,10 @@ export default function InteractiveEnginePreview() {
           <Button
             size="sm"
             onClick={() => navigate("/upload")}
-            className="w-full sm:w-auto rounded-xl px-5 text-xs font-bold bg-primary text-primary-foreground shadow-md gap-1.5 group"
+            className="w-full sm:w-auto rounded-xl px-5 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all gap-1.5 group cursor-pointer"
           >
             <span>Scan Your Resume & Job Description</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>

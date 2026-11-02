@@ -53,9 +53,9 @@ export default function FaqAccordion() {
           <AccordionItem
             key={faq.id}
             value={faq.id}
-            className="border border-border/70 rounded-2xl px-5 sm:px-6 bg-card/60 dark:bg-card/40 backdrop-blur-md shadow-xs transition-all duration-200"
+            className="border border-border/70 rounded-2xl px-5 sm:px-6 bg-card/70 dark:bg-card/40 backdrop-blur-md shadow-xs hover:border-border transition-all duration-200"
           >
-            <AccordionTrigger className="text-left font-bold text-sm sm:text-base py-4 hover:no-underline hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            <AccordionTrigger className="text-left font-bold text-sm sm:text-base py-4 hover:no-underline hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer">
               {faq.question}
             </AccordionTrigger>
             <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed pb-4 pt-1">

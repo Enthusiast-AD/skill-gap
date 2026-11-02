@@ -45,36 +45,45 @@ const COMPANY_LOGOS = [
 export default function Landing() {
   const navigate = useNavigate();
 
+  const handleSmoothScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const yOffset = -76;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-amber-500/20 selection:text-amber-600 dark:selection:text-amber-300">
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-amber-500/20 selection:text-amber-600">
       {/* Top Sticky Navigation */}
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-8 pb-16 md:pt-14 md:pb-24">
+      <section className="relative overflow-hidden pt-6 pb-16 md:pt-10 md:pb-24">
         {/* Ambient Warm Golden/Amber Radial Glows */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[480px] bg-gradient-to-b from-amber-500/10 via-orange-400/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute top-48 left-1/4 w-[400px] h-[300px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute top-48 right-1/4 w-[400px] h-[300px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
         {/* Floating Radiating Integration Arc */}
-        <div className="container mx-auto px-4 max-w-6xl">
+        <div className="container mx-auto px-4 max-w-6xl mb-6 lg:mb-8">
           <HeroIntegrationArc />
         </div>
 
         {/* Hero Content Center */}
-        <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-6 pt-2">
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-6">
           {/* Top Pill / Badge */}
           <motion.div
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/80 bg-card/80 backdrop-blur-md shadow-sm text-xs font-semibold"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xs text-xs font-semibold hover:border-amber-400/70 hover:shadow-sm transition-all cursor-default"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-foreground">AI-Driven Adaptive Onboarding</span>
-            <span className="text-muted-foreground/60">•</span>
-            <span className="text-amber-600 dark:text-amber-400 font-mono font-bold">
+            <span className="text-slate-800">AI-Driven Adaptive Onboarding</span>
+            <span className="text-slate-300">•</span>
+            <span className="text-amber-600 font-mono font-bold">
               v2.5 Engine
             </span>
           </motion.div>
@@ -84,7 +93,7 @@ export default function Landing() {
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.06] max-w-5xl mx-auto"
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.06] max-w-5xl mx-auto text-slate-900"
           >
             Bridge your skill gap,{" "}
             <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
@@ -112,7 +121,7 @@ export default function Landing() {
             <Button
               size="lg"
               onClick={() => navigate("/upload")}
-              className="w-full sm:w-auto h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all gap-2 group cursor-pointer"
+              className="w-full sm:w-auto h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 active:scale-95 transition-all gap-2 group cursor-pointer"
             >
               Start Free Analysis
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -121,10 +130,8 @@ export default function Landing() {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => {
-                document.getElementById("interactive-preview")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="w-full sm:w-auto h-13 px-7 rounded-2xl text-base font-semibold border-border/80 bg-card/60 backdrop-blur-md hover:bg-muted/60 transition-all cursor-pointer"
+              onClick={() => handleSmoothScroll("interactive-preview")}
+              className="w-full sm:w-auto h-13 px-7 rounded-2xl text-base font-semibold border-border/80 bg-card/60 backdrop-blur-md hover:bg-muted/80 hover:border-foreground/20 active:scale-95 transition-all cursor-pointer"
             >
               Explore Live Engine
             </Button>
@@ -160,8 +167,8 @@ export default function Landing() {
             {SAMPLE_PROFILES.map((p) => (
               <button
                 key={p.id}
-                onClick={() => navigate("/upload")}
-                className="px-3 py-1 rounded-full border border-border/70 bg-card/60 hover:border-amber-500/50 hover:text-foreground transition-all flex items-center gap-1.5 cursor-pointer"
+                onClick={() => navigate("/upload", { state: { sampleProfileId: p.id } })}
+                className="px-3.5 py-1 rounded-full border border-border/70 bg-card/60 hover:border-amber-500/50 hover:bg-amber-500/5 hover:text-foreground active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
                 <span>{p.title}</span>
                 <ChevronRight className="w-3 h-3 text-muted-foreground" />
@@ -175,7 +182,7 @@ export default function Landing() {
             initial={{ y: 35, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.45 }}
-            className="pt-10 max-w-5xl mx-auto"
+            className="pt-10 max-w-5xl mx-auto scroll-mt-24"
           >
             <InteractiveEnginePreview />
           </motion.div>
@@ -183,16 +190,16 @@ export default function Landing() {
       </section>
 
       {/* Social Proof Logos Ribbon */}
-      <section className="py-14 border-y border-border/50 bg-muted/20">
-        <div className="container mx-auto px-4 max-w-6xl space-y-5 text-center">
-          <p className="text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground">
-            Bridging skill gaps for talent at modern engineering teams
+      <section className="py-12 border-y border-border/50 bg-muted/20">
+        <div className="container mx-auto px-4 max-w-6xl space-y-4 text-center">
+          <p className="text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground/80">
+            Bridging skill gaps for talent joining top modern engineering teams
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 opacity-80 transition-all duration-300">
             {COMPANY_LOGOS.map((company, idx) => (
               <span
                 key={idx}
-                className="text-base sm:text-lg font-bold font-mono tracking-tight text-foreground/80 hover:text-foreground transition-colors cursor-default"
+                className="text-sm sm:text-base font-bold font-mono tracking-tight text-foreground/75 hover:text-foreground hover:scale-105 transition-all duration-200 cursor-default px-2 py-1 rounded-lg"
               >
                 {company.symbol}
               </span>
@@ -202,7 +209,7 @@ export default function Landing() {
       </section>
 
       {/* Section 2: Why PrepGrap Feels Like a 10x Career Accelerator */}
-      <section id="why-prepgrap" className="py-24 border-b border-border/50 relative">
+      <section id="why-prepgrap" className="py-20 md:py-28 border-b border-border/50 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-16">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
@@ -225,13 +232,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Section 3: Interactive Work Showcase ("What you can hand to PrepGrap 🪄") */}
-      <section id="showcase" className="py-24 border-b border-border/50 bg-muted/15 relative">
+      {/* Section 3: Interactive Work Showcase */}
+      <section id="showcase" className="py-20 md:py-28 border-b border-border/50 bg-muted/15 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-12">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary">
               <Zap className="w-3.5 h-3.5" />
-              USE CASES
+              INTERACTIVE SHOWCASE
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight">
               What you can hand to PrepGrap 🪄
@@ -246,13 +253,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Section 4: Workflow Integration ("Wherever you work") */}
-      <section id="workflow" className="py-24 border-b border-border/50 relative">
+      {/* Section 4: Workflow Integration */}
+      <section id="workflow" className="py-20 md:py-28 border-b border-border/50 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
               <Layers className="w-3.5 h-3.5" />
-              SEAMLESS INTEGRATION
+              WORKFLOW INTEGRATION
             </div>
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
               Like any great teammate, PrepGrap is{" "}
@@ -269,8 +276,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Section 5: Testimonials Masonry Grid ("People love PrepGrap") */}
-      <section id="reviews" className="py-24 border-b border-border/50 bg-muted/15 relative">
+      {/* Section 5: Testimonials Masonry Grid */}
+      <section id="reviews" className="py-20 md:py-28 border-b border-border/50 bg-muted/15 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
@@ -290,7 +297,7 @@ export default function Landing() {
       </section>
 
       {/* Section 6: Security & Privacy */}
-      <section id="security" className="py-24 border-b border-border/50 relative">
+      <section id="security" className="py-20 md:py-28 border-b border-border/50 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-700 dark:text-blue-400">
@@ -313,7 +320,7 @@ export default function Landing() {
       </section>
 
       {/* Section 7: Pricing / Value Cards */}
-      <section id="pricing" className="py-24 border-b border-border/50 bg-muted/15 relative">
+      <section id="pricing" className="py-20 md:py-28 border-b border-border/50 bg-muted/15 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
@@ -336,9 +343,12 @@ export default function Landing() {
       </section>
 
       {/* Section 8: FAQ Accordion */}
-      <section id="faq" className="py-24 border-b border-border/50 relative">
+      <section id="faq" className="py-20 md:py-28 border-b border-border/50 relative scroll-mt-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl space-y-12">
           <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border text-xs font-semibold text-muted-foreground">
+              FREQUENTLY ASKED QUESTIONS
+            </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-mono">
               FAQ.
             </h2>
@@ -351,13 +361,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Section 9: Bottom High-Impact CTA Banner (Lindy Style) */}
-      <section className="py-24 relative overflow-hidden">
+      {/* Section 9: Bottom High-Impact CTA Banner */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
         {/* Soft Radial Amber Glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-amber-500/10 pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl relative">
-          <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-b from-card/90 via-card/80 to-amber-500/10 backdrop-blur-2xl p-8 sm:p-16 text-center space-y-7 shadow-2xl relative overflow-hidden">
+          <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-b from-card/95 via-card/85 to-amber-500/10 backdrop-blur-2xl p-8 sm:p-14 text-center space-y-6 shadow-2xl relative overflow-hidden">
             {/* Ambient Corner Blurs */}
             <div className="absolute -top-24 -left-24 w-64 h-64 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-orange-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -375,7 +385,7 @@ export default function Landing() {
               <Button
                 size="lg"
                 onClick={() => navigate("/upload")}
-                className="h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all gap-2 group cursor-pointer"
+                className="h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 active:scale-95 transition-all gap-2 group cursor-pointer"
               >
                 Start Your Analysis
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -406,7 +416,7 @@ export default function Landing() {
               <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
                 Adaptive skill gap analysis and automated Directed Acyclic Graph (DAG) learning pathway engine.
               </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-card border border-border/70 text-[11px] font-mono text-muted-foreground shadow-xs">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-card border border-border/70 text-[11px] font-mono text-muted-foreground shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>All systems operational • v2.5 live</span>
               </div>
@@ -419,29 +429,29 @@ export default function Landing() {
               </div>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li>
-                  <button onClick={() => navigate("/upload")} className="hover:text-foreground transition-colors cursor-pointer">
+                  <button onClick={() => navigate("/upload")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Skill Gap Scan
                   </button>
                 </li>
                 <li>
-                  <a href="#interactive-preview" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("interactive-preview")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Interactive Preview
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#why-prepgrap" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("why-prepgrap")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     DAG Sequencing
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#workflow" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("workflow")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Verified Curricula
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#pricing" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("pricing")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Pricing Tiers
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -453,29 +463,29 @@ export default function Landing() {
               </div>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li>
-                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("showcase")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Frontend to AI
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("showcase")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Data to MLOps
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("showcase")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Backend to Cloud
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("showcase")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Junior to SRE
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#pricing" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("pricing")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Team Onboarding
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -487,24 +497,24 @@ export default function Landing() {
               </div>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li>
-                  <a href="#security" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("security")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Zero-Retention Policy
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#security" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("security")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     AES-256 Encryption
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#faq" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("faq")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Privacy Guarantee
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#faq" className="hover:text-foreground transition-colors">
+                  <button onClick={() => handleSmoothScroll("faq")} className="hover:text-foreground transition-colors cursor-pointer text-left">
                     Terms of Service
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -514,15 +524,15 @@ export default function Landing() {
           <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <div>© 2026 PrepGrap, Inc. All rights reserved.</div>
             <div className="flex items-center gap-6">
-              <a href="#security" className="hover:text-foreground transition-colors">
+              <button onClick={() => handleSmoothScroll("security")} className="hover:text-foreground transition-colors cursor-pointer">
                 Privacy
-              </a>
-              <a href="#faq" className="hover:text-foreground transition-colors">
+              </button>
+              <button onClick={() => handleSmoothScroll("faq")} className="hover:text-foreground transition-colors cursor-pointer">
                 Security
-              </a>
-              <a href="#faq" className="hover:text-foreground transition-colors">
+              </button>
+              <button onClick={() => handleSmoothScroll("faq")} className="hover:text-foreground transition-colors cursor-pointer">
                 Status
-              </a>
+              </button>
             </div>
           </div>
         </div>
