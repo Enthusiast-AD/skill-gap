@@ -1,5 +1,15 @@
 /* Custom styles for PrepGrap */
 
+/* Global cursor & interactive transitions */
+button,
+[role="button"],
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer;
+}
+
 /* ReactFlow canvas enhancements */
 .react-flow__pane {
   cursor: grab;
@@ -22,9 +32,10 @@
   stroke-width: 3.5;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling with sticky navbar offset compensation */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 /* Custom scrollbars */
@@ -75,3 +86,4 @@ html {
 button, a {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
+

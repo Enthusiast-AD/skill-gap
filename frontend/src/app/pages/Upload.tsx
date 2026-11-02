@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import {
   Upload as UploadIcon,
   FileText,
@@ -25,6 +25,7 @@ import { useAppContext } from "../context/AppContext";
 
 export default function Upload() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setSessionId, setJobTitle: setContextJobTitle } = useAppContext();
 
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -58,6 +59,13 @@ export default function Upload() {
     setResumeFile(syntheticFile);
     setError("");
   };
+
+  useEffect(() => {
+    const sampleId = (location.state as { sampleProfileId?: string })?.sampleProfileId;
+    if (sampleId) {
+      handleApplySampleProfile(sampleId);
+    }
+  }, [location.state]);
 
   const handleResumeDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();

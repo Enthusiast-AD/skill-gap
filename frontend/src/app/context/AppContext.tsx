@@ -40,19 +40,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [pathwayData, setPathwayDataState] = useState<PathwayResponse | null>(null);
   const [jobTitle, setJobTitleState] = useState<string>('');
   const [completedModules, setCompletedModules] = useState<number[]>([]);
-  const [theme, setThemeState] = useState<'light' | 'dark'>('dark');
+  const [theme, setThemeState] = useState<'light' | 'dark'>('light');
 
-  // Initialize theme and restored state on mount
+  // Enforce light theme permanently
   useEffect(() => {
-    // Theme setup
-    const savedTheme = localStorage.getItem(THEME_KEY) as 'light' | 'dark' | null;
-    const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'dark');
-    setThemeState(initialTheme);
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    setThemeState('light');
+    localStorage.setItem(THEME_KEY, 'light');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
 
     // Session restore
     try {
@@ -107,19 +102,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [completedModules, isLoaded]);
 
-  const setTheme = useCallback((newTheme: 'light' | 'dark') => {
-    setThemeState(newTheme);
-    localStorage.setItem(THEME_KEY, newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+  const setTheme = useCallback((_newTheme: 'light' | 'dark') => {
+    setThemeState('light');
+    localStorage.setItem(THEME_KEY, 'light');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setTheme]);
+    setTheme('light');
+  }, [setTheme]);
 
   const setSessionId = (id: string | null) => {
     setSessionIdState(id);

@@ -80,16 +80,16 @@ export default function AcceleratorNarrative() {
               key={idx}
               onMouseEnter={() => setActiveStep(idx)}
               onClick={() => setActiveStep(idx)}
-              className={`p-6 rounded-3xl transition-all duration-300 cursor-pointer border ${
+              className={`p-5 sm:p-6 rounded-3xl transition-all duration-300 cursor-pointer border ${
                 isActive
-                  ? "bg-card/90 dark:bg-card/70 border-primary/30 shadow-xl shadow-black/5 -translate-y-0.5"
-                  : "bg-transparent border-transparent hover:bg-card/40 hover:border-border/60"
+                  ? "bg-card/95 dark:bg-card/75 border-amber-500/30 shadow-xl shadow-amber-500/5 -translate-y-0.5"
+                  : "bg-card/20 border-transparent hover:bg-card/60 hover:border-border/60"
               }`}
             >
               <div className="flex items-start gap-4">
                 <span
                   className={`text-2xl font-black font-mono tracking-tight transition-colors ${
-                    isActive ? "text-amber-500" : "text-muted-foreground/40"
+                    isActive ? "text-amber-500 font-extrabold" : "text-muted-foreground/35"
                   }`}
                 >
                   {item.num}
@@ -172,25 +172,25 @@ export default function AcceleratorNarrative() {
                 <button
                   key={i}
                   onClick={() => toggleSkill(i)}
-                  className={`w-full p-2.5 rounded-xl border text-left text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
+                  className={`w-full p-2.5 rounded-xl border text-left text-xs font-medium transition-all flex items-center justify-between cursor-pointer active:scale-[0.99] ${
                     skill.mastered
-                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-950 dark:text-emerald-200"
-                      : "bg-muted/30 border-border/70 text-muted-foreground hover:border-amber-500/40"
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300"
+                      : "bg-muted/30 border-border/70 text-muted-foreground hover:border-amber-500/40 hover:text-foreground"
                   }`}
                 >
                   <span className="flex items-center gap-2">
                     <span
-                      className={`w-4 h-4 rounded-full flex items-center justify-center border text-[10px] ${
+                      className={`w-4 h-4 rounded-full flex items-center justify-center border text-[10px] transition-colors ${
                         skill.mastered
-                          ? "bg-emerald-500 text-white border-emerald-500"
-                          : "border-muted-foreground/40"
+                          ? "bg-emerald-500 text-white border-emerald-500 shadow-xs"
+                          : "border-muted-foreground/40 bg-background"
                       }`}
                     >
                       {skill.mastered ? "✓" : ""}
                     </span>
                     <span className="font-semibold">{skill.name}</span>
                   </span>
-                  <span className="font-mono text-[10px]">
+                  <span className={`font-mono text-[10px] ${skill.mastered ? "font-bold text-emerald-600 dark:text-emerald-400" : ""}`}>
                     {skill.mastered ? "Mastered" : `+${skill.weight}%`}
                   </span>
                 </button>

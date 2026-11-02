@@ -204,10 +204,10 @@ export default function RoleTransitionShowcase() {
             <button
               key={sc.id}
               onClick={() => setSelectedId(sc.id)}
-              className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 select-none ${
                 isSelected
-                  ? "text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground bg-card/60 hover:bg-card/90 border border-border/60"
+                  ? "text-primary-foreground shadow-md font-bold"
+                  : "text-muted-foreground hover:text-foreground bg-card/70 hover:bg-card/90 border border-border/70 hover:border-border"
               }`}
             >
               {isSelected && (
@@ -370,7 +370,7 @@ export default function RoleTransitionShowcase() {
                 {current.sampleModules.map((mod, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl bg-background/80 border border-border/70 hover:border-primary/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-3"
+                    className="p-4 rounded-2xl bg-card/70 border border-border/70 hover:border-amber-500/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-3"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -390,7 +390,7 @@ export default function RoleTransitionShowcase() {
                     </div>
 
                     <div className="pt-2 border-t border-border/40 flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-primary/80">{mod.tag}</span>
+                      <span className="font-semibold text-amber-600 dark:text-amber-400">{mod.tag}</span>
                       <span className="text-muted-foreground font-mono">{mod.resourceType}</span>
                     </div>
                   </div>
@@ -399,7 +399,7 @@ export default function RoleTransitionShowcase() {
             </div>
 
             {/* Bottom Bar: Action */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border/60">
+            <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border/60">
               <div className="text-xs text-muted-foreground flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>Ready to generate your own personalized roadmap?</span>
@@ -407,7 +407,7 @@ export default function RoleTransitionShowcase() {
               <Button
                 size="sm"
                 onClick={() => navigate("/upload")}
-                className="w-full sm:w-auto rounded-xl px-5 py-2 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5"
+                className="w-full sm:w-auto rounded-xl px-5 py-2 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all gap-1.5 cursor-pointer"
               >
                 Scan Your Resume Now
                 <ArrowRight className="w-3.5 h-3.5" />
