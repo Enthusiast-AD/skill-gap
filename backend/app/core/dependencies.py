@@ -4,9 +4,17 @@ import jwt
 from sqlalchemy.orm import Session
 from app.db.connection import get_db
 from app.db.models import User
-from app.core.security import SECRET_KEY, ALGORITHM
+from app.core.security import SECRET_KEY, LEGACY_SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+
+def decode_token_safely(token: str):
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.PyJWTError:
+        if SECRET_KEY != LEGACY_SECRET_KEY:
+            return jwt.decode(token, LEGACY_SECRET_KEY, algorithms=[ALGORITHM])
+        raise
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
@@ -15,11 +23,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode_token_safely(token)
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-    except jwt.PyJWTError:
+    except Exception:
         raise credentials_exception
     user = db.query(User).filter(User.email == email).first()
     if user is None:
@@ -30,10 +38,10 @@ def get_current_user_optional(token: str = Depends(OAuth2PasswordBearer(tokenUrl
     if not token:
         return None
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode_token_safely(token)
         email: str = payload.get("sub")
         if email:
             return db.query(User).filter(User.email == email).first()
-    except:
+    except Exception:
         pass
     return None

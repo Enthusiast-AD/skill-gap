@@ -2,8 +2,16 @@ import bcrypt
 import jwt
 from datetime import datetime, timedelta
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
-SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key-just-for-dev")
+env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+load_dotenv()
+
+DEFAULT_SECRET_KEY = "skillgap-super-secure-production-ready-jwt-key-32bytes-min"
+LEGACY_SECRET_KEY = "super-secret-key-just-for-dev"
+SECRET_KEY = os.getenv("SECRET_KEY", DEFAULT_SECRET_KEY)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days
 

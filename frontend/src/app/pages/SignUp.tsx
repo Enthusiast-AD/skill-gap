@@ -1,17 +1,16 @@
-import { motion } from "motion/react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Brain, Target, Shield, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Brain, Mail, Lock, Eye, EyeOff, Sparkles, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Checkbox } from "../components/ui/checkbox";
-import { useState } from "react";
 import { registerUser } from "../services/api";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [agreed, setAgreed] = useState<boolean | 'indeterminate'>(false);
+  const [agreed, setAgreed] = useState<boolean | "indeterminate">(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,187 +18,168 @@ export default function SignUp() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please put in both email and password.");
+      setError("Please provide both email and password.");
       return;
     }
     if (!agreed) {
-      setError("Please agree to the terms.");
+      setError("Please agree to the Terms of Service.");
       return;
     }
     setError("");
     setLoading(true);
     try {
       await registerUser(email, password);
-      // Navigate to signin after successful signup
       navigate("/signin");
     } catch (err: any) {
-      setError(err.response?.data?.detail || "An error occurred");
+      setError(err.response?.data?.detail || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8 font-sans transition-colors duration-500">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-[2rem] border border-border/50 bg-card/50 backdrop-blur-2xl shadow-[0_32px_128px_rgba(0,0,0,0.1)]">
-        {/* Left Side: Branding/Marketing */}
-        <div className="hidden w-1/2 flex-col justify-between bg-muted/30 p-12 lg:flex relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-50 group-hover:scale-105 transition-transform duration-1000" />
-
-          <div className="relative z-10">
-            <Link to="/" className="flex items-center gap-3 group/logo w-fit">
-                <img src="/favicon.ico" alt="PrepGrap Logo" className="h-12 w-12 rounded-2xl shadow-2xl transition-all duration-500 group-hover/logo:rotate-12 group-hover/logo:scale-110" />
-              <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background via-background/95 to-muted/30 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex w-full max-w-4xl overflow-hidden rounded-3xl border border-border/70 bg-card/70 dark:bg-card/40 backdrop-blur-2xl shadow-2xl">
+        {/* Left Side: Branding */}
+        <div className="hidden w-1/2 flex-col justify-between bg-muted/20 p-10 lg:flex relative overflow-hidden">
+          <div className="relative z-10 space-y-6">
+            <Link to="/" className="inline-flex items-center gap-2.5 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary/60 flex items-center justify-center shadow-md">
+                <Brain className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-black tracking-tight text-foreground">
                 PrepGrap
               </span>
             </Link>
-          </div>
 
-          <div className="relative z-10 space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-foreground">
-                Bridge Your{" "}
-                <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent italic">
-                  Skill Gaps
-                </span>
-                .
+            <div className="space-y-4 pt-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5" />
+                Adaptive Career Onboarding
+              </div>
+              <h1 className="text-3xl font-black tracking-tight text-foreground leading-tight">
+                Bridge Your Skill Delta.
               </h1>
-              <p className="max-w-md text-lg text-muted-foreground/80 font-medium leading-relaxed">
-                Join thousands of professionals using AI to identify exactly
-                what they need to learn next.
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Save hours of redundant training. Build a tailored roadmap addressing only what you need to master your target role.
               </p>
-            </div>
 
-            <div className="space-y-4">
-              {[
-                {
-                  icon: Brain,
-                  text: "Smart Skill Extraction",
-                  color: "text-primary",
-                },
-                {
-                  icon: Target,
-                  text: "Personalized Roadmap",
-                  color: "text-accent",
-                },
-                {
-                  icon: Shield,
-                  text: "Verified Career Growth",
-                  color: "text-green-500",
-                },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 group/item">
-                  <div
-                    className={`p-2 rounded-lg bg-background/50 border border-border/50 ${item.color} group-hover/item:scale-110 transition-transform`}
-                  >
-                    <item.icon className="h-4 w-4" />
+              <div className="space-y-2.5 pt-2">
+                {[
+                  "Contextual AI Gap Analysis",
+                  "Automated Curriculum Generation",
+                  "Verified Learning Resources",
+                ].map((feat) => (
+                  <div key={feat} className="flex items-center gap-2 text-xs font-semibold text-foreground/90">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <span>{feat}</span>
                   </div>
-                  <span className="text-sm font-bold text-foreground/80">
-                    {item.text}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
+          <div className="relative z-10 text-xs text-muted-foreground">
+            © 2026 PrepGrap. AI-driven skill mapping engine.
+          </div>
         </div>
 
         {/* Right Side: Sign Up Form */}
-        <div className="flex w-full flex-col justify-center p-8 sm:p-14 lg:w-1/2 bg-background/20 backdrop-blur-sm">
-          <div className="mx-auto w-full max-w-sm space-y-10">
-            <div className="text-center lg:text-left space-y-2">
-              <h2 className="text-4xl font-black tracking-tight text-foreground">
+        <div className="flex w-full flex-col justify-center p-8 sm:p-12 lg:w-1/2">
+          <div className="w-full max-w-sm mx-auto space-y-8">
+            <div className="space-y-1">
+              <h2 className="text-3xl font-black tracking-tight text-foreground">
                 Create Account
               </h2>
-              <p className="text-[15px] font-medium text-muted-foreground/80">
-                Start your AI-powered learning journey today
+              <p className="text-xs text-muted-foreground">
+                Get started with adaptive onboarding in seconds
               </p>
             </div>
 
-            <form className="space-y-7" onSubmit={handleRegister}>
-              {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
-              <div className="space-y-5">
-                <div className="space-y-2 group">
-                  <label className="text-sm font-bold text-foreground/70 ml-1">
+            <form className="space-y-5" onSubmit={handleRegister}>
+              {error && (
+                <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs font-medium">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground">
                     Email address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-300" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="name@example.com"
                       type="email"
                       autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 pl-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
+                      className="h-11 pl-10 rounded-xl bg-background/80 border-border/60 text-sm"
+                      required
                     />
                   </div>
                 </div>
-                <div className="space-y-2 group">
-                  <label className="text-sm font-bold text-foreground/70 ml-1">
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-300" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Min. 8 characters"
+                      placeholder="Minimum 6 characters"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 pl-11 pr-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
+                      className="h-11 pl-10 pr-10 rounded-xl bg-background/80 border-border/60 text-sm"
+                      required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-3 ml-1">
+              <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
-                  checked={agreed}
-                  onCheckedChange={setAgreed}
-                  className="mt-0.5 rounded-md border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  checked={agreed === true}
+                  onCheckedChange={(checked) => setAgreed(checked === true)}
+                  className="rounded-md border-border/60"
                 />
-                <label
-                  htmlFor="terms"
-                  className="text-xs font-bold text-muted-foreground leading-tight"
-                >
-                  Agree to{" "}
-                  <Link to="#" className="text-primary hover:underline">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link to="#" className="text-primary hover:underline">
-                    Privacy Policy
-                  </Link>
+                <label htmlFor="terms" className="text-xs text-muted-foreground leading-none cursor-pointer">
+                  I agree to the terms of service and privacy policy
                 </label>
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full h-12 text-base font-black rounded-2xl bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(var(--primary),0.2)] hover:shadow-[0_12px_32px_rgba(var(--primary),0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-                {loading ? "Creating account..." : "Get Started"}
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full h-11 rounded-xl font-bold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg transition-all"
+              >
+                {loading ? "Creating Account..." : "Create Free Account"}
               </Button>
             </form>
 
-            <p className="text-center text-[15px] font-medium text-muted-foreground/80">
-              Already have an account?{" "}
-              <Link
-                to="/signin"
-                className="font-extrabold text-primary hover:underline underline-offset-4 decoration-2 decoration-primary/30"
-              >
-                Log In
+            <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/40">
+              <Link to="/" className="hover:text-foreground flex items-center gap-1">
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Home
               </Link>
-            </p>
+              <div>
+                Already registered?{" "}
+                <Link to="/signin" className="font-bold text-primary hover:underline">
+                  Sign In
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

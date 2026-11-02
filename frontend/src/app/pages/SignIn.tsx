@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Link, useNavigate } from "react-router";
-import { Brain, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Brain, Mail, Lock, Eye, EyeOff, Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useState } from "react";
@@ -17,139 +17,139 @@ export default function SignIn() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please put in both email and password.");
+      setError("Please enter both email and password.");
       return;
     }
     setError("");
     setLoading(true);
     try {
       await loginUser(email, password);
-      // Navigate to home after successful login
-      navigate("/");
+      navigate("/profile");
     } catch (err: any) {
-      setError(err.response?.data?.detail || "An error occurred");
+      setError(err.response?.data?.detail || "Invalid email or password.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8 font-sans transition-colors duration-500">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-[2rem] border border-border/50 bg-card/50 backdrop-blur-2xl shadow-[0_32px_128px_rgba(0,0,0,0.1)]">
-        {/* Left Side: Branding/Marketing */}
-        <div className="hidden w-1/2 flex-col justify-between bg-muted/30 p-12 lg:flex relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-50 group-hover:scale-105 transition-transform duration-1000" />
-
-          <div className="relative z-10">
-            <Link to="/" className="flex items-center gap-3 group/logo w-fit">
-                <img src="/favicon.ico" alt="PrepGrap Logo" className="h-12 w-12 rounded-2xl shadow-2xl transition-all duration-500 group-hover/logo:rotate-12 group-hover/logo:scale-110" />
-              <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background via-background/95 to-muted/30 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex w-full max-w-4xl overflow-hidden rounded-3xl border border-border/70 bg-card/70 dark:bg-card/40 backdrop-blur-2xl shadow-2xl">
+        {/* Left Side: Branding */}
+        <div className="hidden w-1/2 flex-col justify-between bg-muted/20 p-10 lg:flex relative overflow-hidden">
+          <div className="relative z-10 space-y-6">
+            <Link to="/" className="inline-flex items-center gap-2.5 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary/60 flex items-center justify-center shadow-md">
+                <Brain className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-black tracking-tight text-foreground">
                 PrepGrap
               </span>
             </Link>
-          </div>
 
-          <div className="relative z-10 space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-foreground">
-                Master Your{" "}
-                <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent italic">
-                  Career Path
-                </span>
-                .
+            <div className="space-y-3 pt-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5" />
+                Adaptive Career Onboarding
+              </div>
+              <h1 className="text-3xl font-black tracking-tight text-foreground leading-tight">
+                Master Your Growth Path.
               </h1>
-              <p className="max-w-md text-lg text-muted-foreground/80 font-medium leading-relaxed">
-                Log in to resume your skill-gap analysis and personalized
-                roadmap towards your dream role.
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Log in to resume your skill-gap analyses, track completed modules, and access personalized pathways.
               </p>
             </div>
+          </div>
 
-            
+          <div className="relative z-10 text-xs text-muted-foreground">
+            © 2026 PrepGrap. AI-driven skill mapping engine.
           </div>
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="flex w-full flex-col justify-center p-8 sm:p-14 lg:w-1/2 bg-background/20 backdrop-blur-sm">
-          <div className="mx-auto w-full max-w-sm space-y-10">
-            <div className="text-center lg:text-left space-y-2">
-              <h2 className="text-4xl font-black tracking-tight text-foreground">
+        <div className="flex w-full flex-col justify-center p-8 sm:p-12 lg:w-1/2">
+          <div className="w-full max-w-sm mx-auto space-y-8">
+            <div className="space-y-1">
+              <h2 className="text-3xl font-black tracking-tight text-foreground">
                 Sign In
               </h2>
-              <p className="text-[15px] font-medium text-muted-foreground/80">
-                Enter your details to track your growth
+              <p className="text-xs text-muted-foreground">
+                Enter your credentials to access your dashboard
               </p>
             </div>
 
-            <form className="space-y-7" onSubmit={handleLogin}>
-              {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
-              <div className="space-y-5">
-                <div className="space-y-2 group">
-                  <label className="text-sm font-bold text-foreground/70 ml-1">
+            <form className="space-y-5" onSubmit={handleLogin}>
+              {error && (
+                <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs font-medium">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground">
                     Email address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-300" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="name@example.com"
                       type="email"
                       autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 pl-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
+                      className="h-11 pl-10 rounded-xl bg-background/80 border-border/60 text-sm"
+                      required
                     />
                   </div>
                 </div>
-                <div className="space-y-2 group">
-                  <div className="flex items-center justify-between ml-1 leading-none">
-                    <label className="text-sm font-bold text-foreground/70">
-                      Password
-                    </label>
-                    <Link
-                      to="#"
-                      className="text-xs font-bold text-primary/80 hover:text-primary transition-colors"
-                    >
-                      Forgot?
-                    </Link>
-                  </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground">
+                    Password
+                  </label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-300" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 pl-11 pr-11 rounded-2xl bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 font-medium placeholder:text-muted-foreground/40"
+                      className="h-11 pl-10 pr-10 rounded-xl bg-background/80 border-border/60 text-sm"
+                      required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full h-12 text-base font-black rounded-2xl bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(var(--primary),0.2)] hover:shadow-[0_12px_32px_rgba(var(--primary),0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-                {loading ? "Signing In..." : "Sign In Now"}
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full h-11 rounded-xl font-bold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg transition-all"
+              >
+                {loading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
 
-            <p className="text-center text-[15px] font-medium text-muted-foreground/80">
-              Not a member?{" "}
-              <Link
-                to="/signup"
-                className="font-extrabold text-primary hover:underline underline-offset-4 decoration-2 decoration-primary/30"
-              >
-                Join PrepGrap
+            <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/40">
+              <Link to="/" className="hover:text-foreground flex items-center gap-1">
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Home
               </Link>
-            </p>
+              <div>
+                Not a member?{" "}
+                <Link to="/signup" className="font-bold text-primary hover:underline">
+                  Sign Up
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

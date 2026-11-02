@@ -1,484 +1,529 @@
+import React from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import {
   Brain,
-  Zap,
-  Target,
   ArrowRight,
-  TrendingUp,
-  Users,
-  Clock,
+  Sparkles,
+  ChevronRight,
+  Star,
+  CheckCircle2,
+  Lock,
+  Layers,
+  Terminal,
+  Cpu,
+  Database,
+  Cloud,
+  FileText,
+  Boxes,
+  Zap,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
 import Navbar from "../components/Navbar";
+import HeroIntegrationArc from "../components/landing/HeroIntegrationArc";
+import InteractiveEnginePreview from "../components/landing/InteractiveEnginePreview";
+import AcceleratorNarrative from "../components/landing/AcceleratorNarrative";
+import RoleTransitionShowcase from "../components/landing/RoleTransitionShowcase";
+import WorkflowIntegrationCards from "../components/landing/WorkflowIntegrationCards";
+import TestimonialsGrid from "../components/landing/TestimonialsGrid";
+import SecurityCards from "../components/landing/SecurityCards";
+import PricingCards from "../components/landing/PricingCards";
+import FaqAccordion from "../components/landing/FaqAccordion";
+import { SAMPLE_PROFILES } from "../services/api";
+
+const COMPANY_LOGOS = [
+  { name: "Google", symbol: "Google" },
+  { name: "Stripe", symbol: "Stripe" },
+  { name: "Vercel", symbol: "▲ Vercel" },
+  { name: "Meta", symbol: "∞ Meta" },
+  { name: "OpenAI", symbol: "OpenAI" },
+  { name: "Datadog", symbol: "Datadog" },
+  { name: "Figma", symbol: "Figma" },
+  { name: "Notion", symbol: "Notion" },
+];
 
 export default function Landing() {
   const navigate = useNavigate();
 
-  const features = [
-    {
-      icon: Brain,
-      title: "AI-Powered Analysis",
-      description:
-        "Advanced AI parses your resume and job description to identify exact skill gaps",
-    },
-    {
-      icon: Target,
-      title: "Personalized Pathways",
-      description:
-        "Get a tailored learning roadmap that addresses only what you need to learn",
-    },
-    {
-      icon: Clock,
-      title: "Save Time",
-      description:
-        "Skip content you already know and focus on bridging your specific gaps",
-    },
-    {
-      icon: TrendingUp,
-      title: "Faster Onboarding",
-      description:
-        "Reduce time-to-productivity with adaptive, role-specific training",
-    },
-    {
-      icon: Users,
-      title: "For All Levels",
-      description:
-        "Whether you're a new grad or experienced hire, get the right training",
-    },
-    {
-      icon: Zap,
-      title: "Instant Results",
-      description:
-        "Get your personalized learning pathway in seconds, not weeks",
-    },
-  ];
-
-  const stats = [
-    { value: "80%", label: "Time Saved" },
-    { value: "95%", label: "Accuracy" },
-    { value: "10x", label: "Faster Onboarding" },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background/80">
-      {/* Navbar */}
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-amber-500/20 selection:text-amber-600 dark:selection:text-amber-300">
+      {/* Top Sticky Navigation */}
       <Navbar />
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-20 md:py-40 relative overflow-hidden">
-        {/* Background blur elements */}
-        {/* <div className="absolute top-10 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl opacity-30 pointer-events-none" /> */}
-        <div className="absolute bottom-10 -right-40 w-80 h-80 bg-accent/10 rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <section className="relative overflow-hidden pt-8 pb-16 md:pt-14 md:pb-24">
+        {/* Ambient Warm Golden/Amber Radial Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[480px] bg-gradient-to-b from-amber-500/10 via-orange-400/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-48 left-1/4 w-[400px] h-[300px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-48 right-1/4 w-[400px] h-[300px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+        {/* Floating Radiating Integration Arc */}
+        <div className="container mx-auto px-4 max-w-6xl">
+          <HeroIntegrationArc />
+        </div>
+
+        {/* Hero Content Center */}
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-6 pt-2">
+          {/* Top Pill / Badge */}
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="inline-block mb-6"
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/80 bg-card/80 backdrop-blur-md shadow-sm text-xs font-semibold"
           >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-foreground">AI-Driven Adaptive Onboarding</span>
+            <span className="text-muted-foreground/60">•</span>
+            <span className="text-amber-600 dark:text-amber-400 font-mono font-bold">
+              v2.5 Engine
+            </span>
           </motion.div>
 
+          {/* Main Lindy-Style Gradient Headline */}
           <motion.h1
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent leading-tight"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.06] max-w-5xl mx-auto"
           >
-            Stop Training What People Already Know
+            Bridge your skill gap,{" "}
+            <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
+              land the role.
+            </span>
           </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            PrepGrap analyzes your resume against any job description and
-            generates a personalized learning pathway to close the exact skill
-            gaps.
+            Stop training what you already know. PrepGrap parses your resume against target job requisites, isolates the precise missing competencies, and builds a verified step-by-step pathway in seconds.
           </motion.p>
 
+          {/* CTA Buttons */}
           <motion.div
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2"
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
+            <Button
+              size="lg"
+              onClick={() => navigate("/upload")}
+              className="w-full sm:w-auto h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all gap-2 group cursor-pointer"
+            >
+              Start Free Analysis
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => {
+                document.getElementById("interactive-preview")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="w-full sm:w-auto h-13 px-7 rounded-2xl text-base font-semibold border-border/80 bg-card/60 backdrop-blur-md hover:bg-muted/60 transition-all cursor-pointer"
+            >
+              Explore Live Engine
+            </Button>
+          </motion.div>
+
+          {/* Micro-copy & Social Proof Star Rating */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs text-muted-foreground pt-1"
+          >
+            <div className="flex items-center gap-1 text-amber-500">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3.5 h-3.5 fill-current" />
+              ))}
+              <span className="ml-1 font-semibold text-foreground">5.0</span>
+            </div>
+            <span className="hidden sm:inline text-muted-foreground/40">•</span>
+            <span>⚡ Instant 30s analysis</span>
+            <span className="hidden sm:inline text-muted-foreground/40">•</span>
+            <span>100% Free • No credit card required</span>
+          </motion.div>
+
+          {/* Quick Preset Sample Tags */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs text-muted-foreground"
+          >
+            <span className="font-medium text-foreground">Or try with sample pathways:</span>
+            {SAMPLE_PROFILES.map((p) => (
+              <button
+                key={p.id}
                 onClick={() => navigate("/upload")}
+                className="px-3 py-1 rounded-full border border-border/70 bg-card/60 hover:border-amber-500/50 hover:text-foreground transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>{p.title}</span>
+                <ChevronRight className="w-3 h-3 text-muted-foreground" />
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Elevated Desktop Application Frame */}
+          <motion.div
+            id="interactive-preview"
+            initial={{ y: 35, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="pt-10 max-w-5xl mx-auto"
+          >
+            <InteractiveEnginePreview />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social Proof Logos Ribbon */}
+      <section className="py-14 border-y border-border/50 bg-muted/20">
+        <div className="container mx-auto px-4 max-w-6xl space-y-5 text-center">
+          <p className="text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            Bridging skill gaps for talent at modern engineering teams
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
+            {COMPANY_LOGOS.map((company, idx) => (
+              <span
+                key={idx}
+                className="text-base sm:text-lg font-bold font-mono tracking-tight text-foreground/80 hover:text-foreground transition-colors cursor-default"
+              >
+                {company.symbol}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Why PrepGrap Feels Like a 10x Career Accelerator */}
+      <section id="why-prepgrap" className="py-24 border-b border-border/50 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-16">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
+              <Sparkles className="w-3.5 h-3.5" />
+              WHY PREPGRAP
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+              Why PrepGrap feels like{" "}
+              <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
+                a 10x career accelerator.
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Traditional bootcamps and 40-hour video courses make you re-learn what you already mastered. PrepGrap isolates the exact 15% missing delta.
+            </p>
+          </div>
+
+          {/* Stepped Narrative Component */}
+          <AcceleratorNarrative />
+        </div>
+      </section>
+
+      {/* Section 3: Interactive Work Showcase ("What you can hand to PrepGrap 🪄") */}
+      <section id="showcase" className="py-24 border-b border-border/50 bg-muted/15 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-12">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary">
+              <Zap className="w-3.5 h-3.5" />
+              USE CASES
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight">
+              What you can hand to PrepGrap 🪄
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Choose any engineering transition and watch PrepGrap compute the exact delta, map prerequisite dependencies, and sequence verified tutorials.
+            </p>
+          </div>
+
+          {/* Role Transition Showcase with dynamic scenario switcher */}
+          <RoleTransitionShowcase />
+        </div>
+      </section>
+
+      {/* Section 4: Workflow Integration ("Wherever you work") */}
+      <section id="workflow" className="py-24 border-b border-border/50 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
+              <Layers className="w-3.5 h-3.5" />
+              SEAMLESS INTEGRATION
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+              Like any great teammate, PrepGrap is{" "}
+              <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
+                wherever you work.
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Ingest any background, analyze any job requisition, and link directly to world-class verified learning assets.
+            </p>
+          </div>
+
+          <WorkflowIntegrationCards />
+        </div>
+      </section>
+
+      {/* Section 5: Testimonials Masonry Grid ("People love PrepGrap") */}
+      <section id="reviews" className="py-24 border-b border-border/50 bg-muted/15 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+              <Star className="w-3.5 h-3.5 fill-current" />
+              COMMUNITY REVIEWS
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight">
+              People love PrepGrap.
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              From individual candidates cracking senior loops to engineering directors onboarding whole cohorts.
+            </p>
+          </div>
+
+          <TestimonialsGrid />
+        </div>
+      </section>
+
+      {/* Section 6: Security & Privacy */}
+      <section id="security" className="py-24 border-b border-border/50 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-700 dark:text-blue-400">
+              <Lock className="w-3.5 h-3.5" />
+              ENTERPRISE PRIVACY
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+              Compliant, private, and{" "}
+              <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
+                in your control.
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Your career history belongs to you. Zero retention for public model retraining, full encryption, and 1-click permanent purging.
+            </p>
+          </div>
+
+          <SecurityCards />
+        </div>
+      </section>
+
+      {/* Section 7: Pricing / Value Cards */}
+      <section id="pricing" className="py-24 border-b border-border/50 bg-muted/15 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-14">
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-700 dark:text-amber-400">
+              <Sparkles className="w-3.5 h-3.5" />
+              TRANSPARENT VALUE
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+              The career engine that{" "}
+              <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 bg-clip-text text-transparent italic">
+                punches above its price.
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Start with a 100% free gap analysis. Upgrade when you need continuous tracking and export tools.
+            </p>
+          </div>
+
+          <PricingCards />
+        </div>
+      </section>
+
+      {/* Section 8: FAQ Accordion */}
+      <section id="faq" className="py-24 border-b border-border/50 relative">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl space-y-12">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-mono">
+              FAQ.
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
+              Everything you need to know about PrepGrap's adaptive skill engine.
+            </p>
+          </div>
+
+          <FaqAccordion />
+        </div>
+      </section>
+
+      {/* Section 9: Bottom High-Impact CTA Banner (Lindy Style) */}
+      <section className="py-24 relative overflow-hidden">
+        {/* Soft Radial Amber Glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-amber-500/10 pointer-events-none" />
+
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl relative">
+          <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-b from-card/90 via-card/80 to-amber-500/10 backdrop-blur-2xl p-8 sm:p-16 text-center space-y-7 shadow-2xl relative overflow-hidden">
+            {/* Ambient Corner Blurs */}
+            <div className="absolute -top-24 -left-24 w-64 h-64 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-orange-500/15 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="space-y-3 max-w-xl mx-auto relative z-10">
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-foreground">
+                Start with 100% free analysis.
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                Stop guessing what skills you need. Drop your resume, pick a target role, and get your personalized roadmap in 30 seconds.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10 pt-2">
+              <Button
                 size="lg"
-                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-xl hover:shadow-primary/30 px-8 py-6 text-lg group transition-all duration-300"
+                onClick={() => navigate("/upload")}
+                className="h-13 px-8 rounded-2xl text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all gap-2 group cursor-pointer"
               >
                 Start Your Analysis
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="outline"
-                size="lg"
-                className="backdrop-blur-md bg-white/50 border border-white/20 hover:text-black hover:bg-white/20 hover:shadow-lg px-8 py-6 text-lg transition-all duration-300"
-                onClick={() => {
-                  document
-                    .getElementById("how-it-works")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                How It Works
-              </Button>
-            </motion.div>
-          </motion.div>
+            </div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="grid grid-cols-3 gap-10 mt-20 max-w-2xl mx-auto"
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="text-center rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 p-6 hover:bg-white/20 shadow-lg transition-all duration-300"
-              >
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground font-medium">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground relative z-10">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Free forever • No credit card required • Instant results</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Visual Feature Section with Image */}
-      <section className="container mx-auto px-6 py-20 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/15 rounded-full blur-3xl opacity-50 pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-40 pointer-events-none" />
-        </div>
-
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ x: -30, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              {/* Badge */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-block mb-6"
-              >
-                <span className="px-4 py-2 rounded-full bg-primary/20 border border-primary/40 text-sm font-semibold text-primary">
-                  ✨ Advanced Technology
-                </span>
-              </motion.div>
-
-              <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-foreground via-primary to-foreground/70 bg-clip-text text-transparent">
-                  Powered by Advanced AI
-                </span>
-              </h2>
-              <p className="text-lg text-muted-foreground mb-10 leading-relaxed max-w-xl">
-                Our state-of-the-art AI engine uses cutting-edge natural
-                language processing and machine learning to deeply understand
-                the nuances of your professional experience and job
-                requirements, ensuring highly accurate skill matching and gap
-                identification.
-              </p>
-
-              <div className="space-y-6 mb-8">
-                <motion.div
-                  whileHover={{ x: 12, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="group"
-                >
-                  <div className="flex items-start gap-4 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 hover:border-primary/50 hover:bg-white/20 shadow-lg transition-all duration-300">
-                    <motion.div
-                      whileHover={{ scale: 1.2, rotate: 10 }}
-                      className="w-12 h-12 bg-gradient-to-br from-primary/40 to-primary/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"
-                    >
-                      <Brain className="w-6 h-6 text-primary" />
-                    </motion.div>
-                    <div>
-                      <h3 className="font-bold text-lg mb-2 text-foreground">
-                        Smart Skill Extraction
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        Advanced AI automatically identifies, categorizes, and
-                        weighs both technical and soft skills from your
-                        documents with contextual understanding
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ x: 12, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="group"
-                >
-                  <div className="flex items-start gap-4 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 hover:border-primary/50 hover:bg-white/20 shadow-lg transition-all duration-300">
-                    <motion.div
-                      whileHover={{ scale: 1.2, rotate: -10 }}
-                      className="w-12 h-12 bg-gradient-to-br from-primary/40 to-primary/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"
-                    >
-                      <Target className="w-6 h-6 text-primary" />
-                    </motion.div>
-                    <div>
-                      <h3 className="font-bold text-lg mb-2 text-foreground">
-                        Precision Gap Analysis
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        Identifies not just missing skills, but also areas
-                        needing improvement with detailed proficiency scoring
-                        and priority ranking
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+      {/* Multi-Column Footer */}
+      <footer className="border-t border-border/60 py-16 bg-muted/20">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-12">
+          {/* Main Footer Columns */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+            {/* Brand column */}
+            <div className="col-span-2 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold">
+                  <Brain className="w-4 h-4" />
+                </div>
+                <span className="font-extrabold text-lg tracking-tight">PrepGrap</span>
               </div>
-            </motion.div>
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
+                Adaptive skill gap analysis and automated Directed Acyclic Graph (DAG) learning pathway engine.
+              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-card border border-border/70 text-[11px] font-mono text-muted-foreground shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>All systems operational • v2.5 live</span>
+              </div>
+            </div>
 
-            <motion.div
-              initial={{ x: 30, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative"
-            >
-              <motion.div
-                whileHover={{ y: -15, scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="rounded-3xl overflow-hidden  backdrop-blur-sm bg-gradient-to-br from-white/10 to-white/5 mx-auto"
-              >
-                <img
-                  src="landingvec.jpg"
-                  alt="vector_image"
-                  className="w-5xl h-5xl"
-                />
-              </motion.div>
+            {/* Product Column */}
+            <div className="space-y-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-foreground">
+                Product
+              </div>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li>
+                  <button onClick={() => navigate("/upload")} className="hover:text-foreground transition-colors cursor-pointer">
+                    Skill Gap Scan
+                  </button>
+                </li>
+                <li>
+                  <a href="#interactive-preview" className="hover:text-foreground transition-colors">
+                    Interactive Preview
+                  </a>
+                </li>
+                <li>
+                  <a href="#why-prepgrap" className="hover:text-foreground transition-colors">
+                    DAG Sequencing
+                  </a>
+                </li>
+                <li>
+                  <a href="#workflow" className="hover:text-foreground transition-colors">
+                    Verified Curricula
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="hover:text-foreground transition-colors">
+                    Pricing Tiers
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-              {/* Floating accent elements */}
-            </motion.div>
+            {/* Solutions Column */}
+            <div className="space-y-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-foreground">
+                Solutions
+              </div>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li>
+                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                    Frontend to AI
+                  </a>
+                </li>
+                <li>
+                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                    Data to MLOps
+                  </a>
+                </li>
+                <li>
+                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                    Backend to Cloud
+                  </a>
+                </li>
+                <li>
+                  <a href="#showcase" className="hover:text-foreground transition-colors">
+                    Junior to SRE
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="hover:text-foreground transition-colors">
+                    Team Onboarding
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Company & Legal */}
+            <div className="space-y-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-foreground">
+                Security & Trust
+              </div>
+              <ul className="space-y-2 text-xs text-muted-foreground">
+                <li>
+                  <a href="#security" className="hover:text-foreground transition-colors">
+                    Zero-Retention Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#security" className="hover:text-foreground transition-colors">
+                    AES-256 Encryption
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-foreground transition-colors">
+                    Privacy Guarantee
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-foreground transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* How It Works */}
-      <section
-        id="how-it-works"
-        className="container mx-auto px-6 py-20 relative overflow-hidden"
-      >
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl opacity-40 pointer-events-none" />
-
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              How It Works
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Three simple steps to your personalized learning pathway
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Upload Documents",
-                description:
-                  "Upload your resume and the target job description. We support PDF, DOCX, and TXT formats.",
-              },
-              {
-                step: "02",
-                title: "AI Analysis",
-                description:
-                  "Our AI engine extracts skills from both documents and identifies gaps with precision scoring.",
-              },
-              {
-                step: "03",
-                title: "Get Your Roadmap",
-                description:
-                  "Receive a personalized, ordered learning pathway with module recommendations and timelines.",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.step}
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card className="p-8 h-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl shadow-xl backdrop-blur-xl hover:border-primary/40 hover:shadow-2xl hover:bg-white/15 transition-all duration-300 group">
-                  <div className="text-6xl font-bold bg-gradient-to-r from-primary/40 to-primary/20 bg-clip-text text-transparent mb-4 group-hover:from-primary/60 group-hover:to-primary/40 transition-all duration-300">
-                    {item.step}
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3 text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section
-        id="features"
-        className="container mx-auto px-6 py-20 relative overflow-hidden"
-      >
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-40 pointer-events-none" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold mb-5 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent  ">
-              Why PrepGrap?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Intelligent features designed for modern corporate onboarding
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                whileHover={{ y: -8 }}
-              >
-                <Card className="p-8 h-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl shadow-xl backdrop-blur-xl group hover:border-primary/40 hover:shadow-2xl hover:bg-white/15 transition-all duration-300">
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-12 h-12 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:from-primary/50 group-hover:to-primary/30 transition-all duration-300 shadow-lg"
-                  >
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-3 text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="container mx-auto px-6 py-20 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 rounded-3xl" />
-
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <Card className="p-12 md:p-16 text-center bg-gray-100 border border-white/20 shadow-2xl rounded-3xl backdrop-blur-xl hover:shadow-3xl transition-all duration-300">
-            <motion.h2
-              whileInView={{ scale: 1.05 }}
-              transition={{ type: "spring" }}
-              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
-            >
-              Ready to Bridge Your Skill Gaps?
-            </motion.h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals who are accelerating their career
-              growth with AI-powered personalized learning.
-            </p>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                onClick={() => navigate("/upload")}
-                size="lg"
-                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-xl hover:shadow-primary/40 px-8 py-6 text-lg group transition-all duration-300"
-              >
-                Get Started Free
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </motion.div>
-          </Card>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
-      <footer
-        id="about"
-        className="border-t border-white/10 bg-gradient-to-b from-transparent via-white/5 to-white/10 backdrop-blur-xl"
-      >
-        <div className="container mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <img src="/favicon.ico" alt="PrepGrap Logo" className="w-6 h-6 rounded-lg shadow-lg" />
-              <span className="font-bold text-lg bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                PrepGrap
-              </span>
-            </motion.div>
-            <p className="text-sm text-muted-foreground">
-              © 2026 PrepGrap. Bridging skills gaps with intelligent
-              onboarding.
-            </p>
-          </div>
-          <div className="border-t border-white/10 mt-8 pt-8 flex justify-center gap-6">
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Privacy
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Terms
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </motion.a>
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+            <div>© 2026 PrepGrap, Inc. All rights reserved.</div>
+            <div className="flex items-center gap-6">
+              <a href="#security" className="hover:text-foreground transition-colors">
+                Privacy
+              </a>
+              <a href="#faq" className="hover:text-foreground transition-colors">
+                Security
+              </a>
+              <a href="#faq" className="hover:text-foreground transition-colors">
+                Status
+              </a>
+            </div>
           </div>
         </div>
       </footer>

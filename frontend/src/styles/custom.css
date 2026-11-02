@@ -1,30 +1,25 @@
 /* Custom styles for PrepGrap */
 
-/* Glass Morphism Effect */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* ReactFlow canvas enhancements */
+.react-flow__pane {
+  cursor: grab;
 }
 
-/* ReactFlow custom styles */
+.react-flow__pane:active {
+  cursor: grabbing;
+}
+
 .react-flow__node {
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.react-flow__node:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .react-flow__edge-path {
-  stroke-width: 2;
+  stroke-width: 2.5;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
 }
 
-.react-flow__minimap {
-  background-color: #f8f8f8;
-  border: 1px solid #d1d5db;
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3.5;
 }
 
 /* Smooth scrolling */
@@ -32,10 +27,10 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -43,73 +38,40 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(209, 213, 219, 0.5);
-  border-radius: 5px;
-  backdrop-filter: blur(10px);
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.7);
+  background: rgba(148, 163, 184, 0.45);
 }
 
-/* Dark mode scrollbar */
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.5);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 0.7);
+  background: rgba(255, 255, 255, 0.25);
 }
 
-/* Button gradient animations */
-@keyframes gradient-slide {
-  0% {
-    background-position: 0% 50%;
+/* Keyframes for subtle ambient glow */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    opacity: 0.7;
+    transform: scale(1.04);
   }
 }
 
-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.animate-pulse-subtle {
+  animation: pulse-subtle 4s ease-in-out infinite;
 }
 
-/* Smooth page transitions */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  border-color: var(--primary);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--foreground), var(--foreground-80%));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Blur background elements */
-.blur-bg {
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+/* Interactive transitions */
+button, a {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
